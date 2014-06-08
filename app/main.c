@@ -1,6 +1,7 @@
 #include "stm32f2xx.h"
 
 #include "systick.h"
+#include "dac.h"
 
 
 int main()
@@ -20,6 +21,8 @@ int main()
   GPIO_Init(GPIOE, &GPIO_InitStructure);
   
   GPIOE->ODR |= GPIO_Pin_3;
+  
+  DAC_HwInit();
   
   
   for(;;)
