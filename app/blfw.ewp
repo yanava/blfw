@@ -1839,6 +1839,15 @@
     </settings>
   </configuration>
   <group>
+    <name>DAC</name>
+    <file>
+      <name>$PROJ_DIR$\dac.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\dac.h</name>
+    </file>
+  </group>
+  <group>
     <name>periph_driver</name>
     <file>
       <name>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>
@@ -1943,12 +1952,15 @@
       <name>$PROJ_DIR$\..\Libraries\CMSIS\Device\ST\STM32F2xx\Source\Templates\system_stm32f2xx.c</name>
     </file>
   </group>
-  <file>
-    <name>$PROJ_DIR$\dac.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\dac.h</name>
-  </file>
+  <group>
+    <name>USART</name>
+    <file>
+      <name>$PROJ_DIR$\usart.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usart.h</name>
+    </file>
+  </group>
   <file>
     <name>$PROJ_DIR$\main.c</name>
   </file>
