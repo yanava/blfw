@@ -1,5 +1,6 @@
-#include "dac.h"
 
+#include "stm32f2xx.h"
+#include "dac.h"
 
 void DAC_HwInit()
 {
