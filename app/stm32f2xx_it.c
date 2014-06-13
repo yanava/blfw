@@ -164,5 +164,24 @@ void SysTick_Handler(void)
   * @}
   */ 
 
+/**
+  * @brief  This function handles  EXTI9_5 interrupt request.
+  * @param  None
+  * @retval None
+  */
+void EXTI9_5_IRQHandler(void)
+{
+    if(EXTI_GetITStatus(EXTI_Line5) != RESET)
+    {
+        // Sets LED D21
+        GPIO_SetBits (GPIOE, GPIO_Pin_1);
+          
+        /* Clear the EXTI line 0 pending bit */
+        EXTI_ClearITPendingBit(EXTI_Line5);
+    }
+}
+
+
+
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
