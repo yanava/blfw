@@ -5,5 +5,8 @@
 #ifndef __USART_H_
 #define __USART_H_
 
+// Public members
+void USART2_Init(void);
+void USART2_Test(void);
 
 #endif /* __USART_H_ */
