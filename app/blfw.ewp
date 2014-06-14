@@ -1953,6 +1953,9 @@
     </file>
   </group>
   <group>
+    <name>TIMER</name>
+  </group>
+  <group>
     <name>USART</name>
     <file>
       <name>$PROJ_DIR$\usart.c</name>

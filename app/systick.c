@@ -2,7 +2,7 @@
 
 static __IO uint32_t timing_delay;
 
-void SYSTICK_delay_10ms(__IO uint32_t nTime)
+void SYSTICK_delay_ms(__IO uint32_t nTime)
 {
   timing_delay = nTime;
 
@@ -24,6 +24,6 @@ void SYSTICK_Init(void)
   
   /* SysTick end of count event each 10ms */
   RCC_GetClocksFreq(&RCC_Clocks);
-  //SysTick_Config(SystemCoreClock/100);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
+  
+  SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
 }

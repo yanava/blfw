@@ -2,7 +2,7 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>1450427758</fileChecksum>
+  <fileChecksum>635004987</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
@@ -172,6 +172,10 @@
       <file>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_dcmi.c</file>
       <file>$PROJ_DIR$\dac.c</file>
       <file>$PROJ_DIR$\dac.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer.o</file>
+      <file>$PROJ_DIR$\timer.c</file>
+      <file>$PROJ_DIR$\timer.h</file>
     </outputs>
     <file>
       <name>$PROJ_DIR$\Debug\Exe\c.out</name>
@@ -1048,6 +1052,25 @@
         <tool>
           <name>ICCARM</name>
           <file> 89 44 94 81 82 64 87 77 14 8 42 23 69 134 95 137 118 43 119 34 105 114 84 68 66 92 71 29 70 17 109 115 86 113 103 31 110 111 97 79 116 48 165</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\timer.c</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 166</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 169 89 44 94 81 82 64 87 77 14 8 42 23 69 134 95 137 118 43 119 34 105 114 84 68 66 92 71 29 70 17 109 115 86 113 103 31 110 111 97 79 116 48</file>
+        </tool>
+        <tool>
+          <name>ICCARM</name>
+          <file> 169 89 44 94 81 82 64 87 77 14 8 42 23 69 134 95 137 118 43 119 34 105 114 84 68 66 92 71 29 70 17 109 115 86 113 103 31 110 111 97 79 116 48</file>
         </tool>
       </inputs>
     </file>

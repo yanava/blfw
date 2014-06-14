@@ -17,9 +17,8 @@
 #define USART_STOPBITS      (USART_StopBits_1)
 #define USART_PARITY        (USART_Parity_No)
 #define USART_FLOWCTRL      (USART_HardwareFlowControl_RTS_CTS)
-#define USART_MODE          (USART_Mode_Rx | USART_Mode_Tx)
+#define USART_MODE          (USART_Mode_Tx)
 
-uint16_t data_packet = 0xAB;
 
 // USART2 Init Function
 void USART2_Init(void)
@@ -63,8 +62,3 @@ void USART2_Init(void)
     USART_Cmd(USART2, ENABLE);
 }
 
-
-void USART2_Test(void)
-{  
-    USART_SendData(USART2,data_packet);
-}

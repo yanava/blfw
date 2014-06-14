@@ -7,6 +7,5 @@
 
 // Public members
 void USART2_Init(void);
-void USART2_Test(void);
 
 #endif /* __USART_H_ */
