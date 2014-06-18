@@ -1848,6 +1848,15 @@
     </file>
   </group>
   <group>
+    <name>FSM</name>
+    <file>
+      <name>$PROJ_DIR$\fsm.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\fsm.h</name>
+    </file>
+  </group>
+  <group>
     <name>periph_driver</name>
     <file>
       <name>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>

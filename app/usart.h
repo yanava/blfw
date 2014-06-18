@@ -7,5 +7,6 @@
 
 // Public members
 void USART2_Init(void);
+uint32_t USART2_Send_Packet(uint32_t data_length, uint16_t *data);
 
 #endif /* __USART_H_ */
