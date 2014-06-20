@@ -12,20 +12,6 @@
 #include "stm32f2xx_usart.h"
 #include "usart.h"
 
-#define USART_BAUD          (115200)
-#define USART_WORDLENGTH    (USART_WordLength_8b)
-#define USART_STOPBITS      (USART_StopBits_1)
-#define USART_PARITY        (USART_Parity_No)
-#define USART_FLOWCTRL      (USART_HardwareFlowControl_None)
-#define USART_MODE          (USART_Mode_Rx | USART_Mode_Tx)
-
-#define USART_FIFO_SIZE (128)
-#define USART_FIFO_MASK (USART_FIFO_SIZE-1)
-
-#if ( USART_FIFO_SIZE & USART_FIFO_MASK )
-    #error RX buffer size is not a power of 2
-#endif
-
 typedef struct USART_BUFFER_TAG
 {
     uint8_t tx_buf[USART_FIFO_SIZE];
@@ -137,4 +123,51 @@ void USART2_Receive_Byte(uint8_t *data)
      } 
 }
 
+// Gets TX Tail
+uint8_t USART2_Get_Tx_Tail(void)
+{
+    return usart2_buffer.tx_tail;
+}
+
+// Increments TX Tail
+void USART2_Increment_Tx_Tail (void)
+{
+    usart2_buffer.tx_tail++;
+}
+
+// Gets TX Head
+uint8_t USART2_Get_Tx_Head(void)
+{
+    return usart2_buffer.tx_head;
+}
+
+// Get data from TX Buf
+uint8_t USART2_DataFromTXBuf(uint8_t position) 
+{
+    return usart2_buffer.tx_buf[position];
+}
+
+// Gets RX Tail
+uint8_t USART2_Get_Rx_Tail(void)
+{
+    return usart2_buffer.rx_tail;
+}
+
+// Gets RX Head
+uint8_t USART2_Get_Rx_Head(void)
+{
+    return usart2_buffer.rx_head;
+}
+
+// Increments RX Head
+void USART2_Increment_Rx_Head(void)
+{
+    usart2_buffer.rx_head++;
+}
+
+// Put data on RX Buf
+void USART2_DataToRXBuf(uint8_t data, uint8_t position) 
+{
+    usart2_buffer.rx_buf[position] = data;
+}
 

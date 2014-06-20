@@ -30,6 +30,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f2xx_it.h"
 #include "systick.h"
+#include "usart.h"
 
 /** @addtogroup Template_Project
   * @{
@@ -163,5 +164,54 @@ void SysTick_Handler(void)
 /**
   * @}
   */ 
+
+#define _USART_ISR_
+
+// USART2 ISR. This should not be here, but it is. Try to move it if you feel
+// unconfortable, but I advise: It's hard. 
+void USART2_IRQHandler(void)
+{
+    
+    // Receive Interrupt
+    if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
+    {
+        // New FIFO head points to next available data slot
+        uint8_t new_head = ((USART2_Get_Rx_Head() + 1) & USART_FIFO_MASK);
+                         
+        // Overflow imminence, we should do something                     
+        if ( new_head == USART2_Get_Rx_Tail())
+            return;
+
+        // Free space available, put data on RX FIFO and advance head
+        else
+        {
+            USART2_DataToRXBuf((uint8_t) USART_ReceiveData(USART2),new_head);
+            USART2_Increment_Rx_Head();
+            
+            return;
+        }
+    }
+    // Transmit Interrupt   
+    if(USART_GetITStatus(USART2, USART_IT_TXE) != RESET)
+    {
+        // Head = Tail -> Tail has caught up, disable TX Interrupts
+        if(USART2_Get_Tx_Head() == USART2_Get_Tx_Tail())
+        {
+            USART_ITConfig (USART2, USART_IT_TXE , DISABLE);
+        }
+        // Head is different, need to send data
+        else
+        {
+            uint8_t new_tail = ((USART2_Get_Tx_Tail() + 1) & USART_FIFO_MASK); 
+            
+            USART_SendData (USART2, (uint16_t) USART2_DataFromTXBuf(new_tail));
+            USART2_Increment_Tx_Tail();
+        }
+    }
+}
+
+#undef _USART_ISR_
+
+
   
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
