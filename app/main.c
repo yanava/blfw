@@ -131,6 +131,7 @@ void main(void)
     // Main loop will execute forever
     for(;;)
     {
+        /*
         if (!GPIO_ReadInputDataBit (GPIOE, GPIO_Pin_5))
         {
             testEvent.super.signal = TEST_SIGNAL_A;
@@ -142,6 +143,10 @@ void main(void)
             FSM_Dispatch((FSM *)&testMachine,(FSM_Event *)&testEvent); 
         }
         light_up_led(testMachine.unnecessary_property);
+        */
+        
+        USART2_Send_Byte(0x12);
+        SYSTICK_delay_ms(100);
     }
     
 }

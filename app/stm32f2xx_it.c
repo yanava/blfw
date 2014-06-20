@@ -163,27 +163,5 @@ void SysTick_Handler(void)
 /**
   * @}
   */ 
-
-
-/**
-* @brief USART2 global interrupt request.
-* @param None
-* @retval None
-*/
-/* At the moment USART via Interrupt is disabled!!
-void USART2_IRQHandler(void)
-{
-    
-    volatile uint16_t usart_rx_data; 
-    
-    if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
-    {
-        usart_rx_data = USART_ReceiveData(USART2);
-    }
-       
-        
-}
-*/  
-  
   
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

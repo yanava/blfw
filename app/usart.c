@@ -19,11 +19,24 @@
 #define USART_FLOWCTRL      (USART_HardwareFlowControl_None)
 #define USART_MODE          (USART_Mode_Rx | USART_Mode_Tx)
 
-#define USART2_FIFO_SIZE 128
+#define USART_FIFO_SIZE (128)
+#define USART_FIFO_MASK (USART_FIFO_SIZE-1)
 
-uint8_t USART2_TxFifo[USART2_FIFO_SIZE];
-uint8_t USART2_RxFifo[USART2_FIFO_SIZE];
+#if ( USART_FIFO_SIZE & USART_FIFO_MASK )
+    #error RX buffer size is not a power of 2
+#endif
 
+typedef struct USART_BUFFER_TAG
+{
+    uint8_t tx_buf[USART_FIFO_SIZE];
+    uint8_t tx_head;
+    uint8_t tx_tail;
+    uint8_t rx_buf[USART_FIFO_SIZE];
+    uint8_t rx_head;
+    uint8_t rx_tail;
+} USART_BUFFER_T;
+
+static USART_BUFFER_T usart2_buffer;
 
 // USART2 Init Function
 void USART2_Init(void)
@@ -32,7 +45,7 @@ void USART2_Init(void)
     // Init structures for GPIO, USART and NVIC
     GPIO_InitTypeDef  GPIO_InitStructure;
     USART_InitTypeDef USART_InitStructure;
-    //NVIC_InitTypeDef NVIC_InitStructure;
+    NVIC_InitTypeDef NVIC_InitStructure;
         
     // Enable AHB clock to GPIOD
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
@@ -67,47 +80,61 @@ void USART2_Init(void)
     // Init USART2 Peripheral
     USART_Init(USART2, &USART_InitStructure);
     
-    /* At the moment USART via Interrupt is disabled!!
-    
     // Enable USART2 IRQ channel in the NVIC controller.
     // Interrupts are triggered upon data reception
-    //NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
-    //NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-    //NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-    //NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    //NVIC_Init(&NVIC_InitStructure);
+    NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
         
     // Configure USART2 Interrupt for data reception triggering
-    //USART_ITConfig (USART2, USART_IT_RXNE, ENABLE);
+    USART_ITConfig (USART2, USART_IT_RXNE , ENABLE);
     
-    */
-    
+   
     // Enable USART2
     USART_Cmd(USART2, ENABLE);
        
 }
 
-
-// This is blocking code. It's as bad as having sex without condoms.
-// Replace this as soon as you get the chance
-void USART2_Send_Byte(uint16_t data)
+// Sends one byte via the UART
+void USART2_Send_Byte(uint8_t data)
 {
-    // Sends the data info
-    USART_SendData (USART2, data);
-    
-    // Waits until the data is gone
-    while (USART_GetFlagStatus(USART2,USART_FLAG_TXE) != SET);
-    return;
+    // New FIFO head points to next available data slot
+    uint8_t new_head = ((usart2_buffer.tx_head + 1) & USART_FIFO_MASK);
+                         
+    // Overflow imminence, we should do something                     
+    if ( new_head == usart2_buffer.tx_tail)
+        return;
+
+    // Free space available, put data on TX FIFO and advance head
+    else
+    {
+        usart2_buffer.tx_buf[new_head] = data;
+        usart2_buffer.tx_head = new_head;
+        
+        // Turns on the TXE interrupt, so data can be sent via interrupt
+        USART_ITConfig (USART2, USART_IT_TXE , ENABLE);
+        
+        return;
+    }
 }
 
-// Sends a packet via UART2
-uint32_t USART2_Send_Packet(uint32_t data_length, uint16_t *data)
+// Gets one byte received via UART from the buffer
+void USART2_Receive_Byte(uint8_t *data)
 {
-    // Sends bytes until theres nothing more to be sent
-    for (int i = 0; i < data_length; i++)
-        USART2_Send_Byte(data[i]);                
+    // Underflow, we should do something
+     if(usart2_buffer.tx_head == usart2_buffer.tx_tail)
+        return;
     
-    // this is pointless but, for now, necessary
-    return data_length;
+     // New data has arrived, get the next byte
+     else
+     {
+         uint8_t new_tail = ((usart2_buffer.rx_tail + 1) & USART_FIFO_MASK);   
+        
+         *data = usart2_buffer.rx_buf[new_tail];
+         usart2_buffer.rx_tail = new_tail;      
+     } 
 }
-          
+
+
