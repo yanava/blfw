@@ -55,3 +55,21 @@ void QUEUE_Get(QUEUE *me, void *element)
         me->tail = new_tail;
     }  
 }
+
+// Gets the available space on the queue
+// The minus one comes from the fact that Head == Tail is only acceptable as 
+// a Queue empty condition. So, for all practical purposes, you got one less
+// space available to fill the Queue. 
+uint8_t QUEUE_AvailableSpace(QUEUE *me)
+{
+    // Head == Tail -> Queue is free!
+    if(me->head == me->tail)
+        return (me->elements - 1);
+    // Head is geometrically ahead of tail
+    else if(me->head > me->tail)
+        return (me->elements - 1 - (me->head - me->tail)/me->element_size);
+    // Head is geometrically behind of tail
+    else 
+        return ((me->tail - me->head)/me->element_size - 1);
+}
+

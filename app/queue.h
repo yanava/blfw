@@ -20,5 +20,6 @@ typedef struct QUEUE_TAG
 void QUEUE_Ctor(QUEUE *me, void *buffer, uint8_t elements, size_t element_size);
 void QUEUE_Post(QUEUE *me, void *element);
 void QUEUE_Get(QUEUE *me, void *element);
+uint8_t QUEUE_AvailableSpace(QUEUE *me);
 
 #endif // __QUEUE_H_
