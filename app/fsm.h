@@ -7,7 +7,7 @@
 typedef uint8_t FSM_EventSignal;
 
 // Event structure. Extend parameters by inheriting from this structure. 
-typedef struct FSM_EventTag
+typedef struct FSM_Event_Tag
 {
     FSM_EventSignal signal;     // Event signal
 } FSM_Event;

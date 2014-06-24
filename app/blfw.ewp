@@ -230,7 +230,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>1111111</state>
+          <state>0000000</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -321,7 +321,7 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
@@ -330,7 +330,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>CompilerMisraRules98</name>
@@ -1950,6 +1950,15 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_wwdg.c</name>
+    </file>
+  </group>
+  <group>
+    <name>QUEUE</name>
+    <file>
+      <name>$PROJ_DIR$\queue.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\queue.h</name>
     </file>
   </group>
   <group>

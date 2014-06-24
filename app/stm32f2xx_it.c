@@ -165,8 +165,6 @@ void SysTick_Handler(void)
   * @}
   */ 
 
-#define _USART_ISR_
-
 // USART2 ISR. This should not be here, but it is. Try to move it if you feel
 // unconfortable, but I advise: It's hard. 
 void USART2_IRQHandler(void)
@@ -209,9 +207,5 @@ void USART2_IRQHandler(void)
         }
     }
 }
-
-#undef _USART_ISR_
-
-
   
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

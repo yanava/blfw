@@ -1,4 +1,4 @@
-// USART.H
+// USART.C
 // Source file for USART routines
 // MAH - 06/2014 - Initial Version
 
@@ -12,7 +12,7 @@
 #include "stm32f2xx_usart.h"
 #include "usart.h"
 
-typedef struct USART_BUFFER_TAG
+typedef struct USART_Buffer_Tag
 {
     uint8_t tx_buf[USART_FIFO_SIZE];
     uint8_t tx_head;
@@ -20,14 +20,13 @@ typedef struct USART_BUFFER_TAG
     uint8_t rx_buf[USART_FIFO_SIZE];
     uint8_t rx_head;
     uint8_t rx_tail;
-} USART_BUFFER_T;
+} USART_Buffer;
 
-static USART_BUFFER_T usart2_buffer;
+static USART_Buffer usart2_buffer;
 
 // USART2 Init Function
 void USART2_Init(void)
 {
-  
     // Init structures for GPIO, USART and NVIC
     GPIO_InitTypeDef  GPIO_InitStructure;
     USART_InitTypeDef USART_InitStructure;
@@ -76,11 +75,9 @@ void USART2_Init(void)
         
     // Configure USART2 Interrupt for data reception triggering
     USART_ITConfig (USART2, USART_IT_RXNE , ENABLE);
-    
-   
-    // Enable USART2
-    USART_Cmd(USART2, ENABLE);
        
+    // Enable USART2
+    USART_Cmd(USART2, ENABLE);  
 }
 
 // Sends one byte via the UART
@@ -106,11 +103,28 @@ void USART2_Send_Byte(uint8_t data)
     }
 }
 
+// Sends multiple bytes of data over the UART2
+// If there is no available space on the FIFO, returns without sending the data
+void USART2_Send_Packet(uint32_t length, uint8_t *data)
+{
+    // You are trying to send more bytes than FIFO has space for.
+    if (length > USART2_Check_TxFifo_Space())
+        return;
+    // FIFO has available space for your data
+    else 
+    { 
+        // Put all your bytes on the FIFO
+        for(int i = 0; i < length; i++)
+            USART2_Send_Byte(data[i]);
+    }
+}
+
+
 // Gets one byte received via UART from the buffer
 void USART2_Receive_Byte(uint8_t *data)
 {
     // Underflow, we should do something
-     if(usart2_buffer.tx_head == usart2_buffer.tx_tail)
+     if(usart2_buffer.rx_head == usart2_buffer.rx_tail)
         return;
     
      // New data has arrived, get the next byte
@@ -121,6 +135,37 @@ void USART2_Receive_Byte(uint8_t *data)
          *data = usart2_buffer.rx_buf[new_tail];
          usart2_buffer.rx_tail = new_tail;      
      } 
+}
+
+// Gets one byte received via UART from the buffer
+void USART2_Receive_Packet(uint8_t *data,  uint8_t length)
+{
+    // You are trying to get more bytes from the FIFO than there are new
+    // received bytes. 
+    if (length > USART2_Check_RxFifo_Data_Size())
+        return;
+    // You are trying to get an OK amount of bytes
+    else 
+    { 
+        // Retrieve all your bytes from the FIFO
+        for(int i = 0; i < length; i++)
+            USART2_Receive_Byte(&data[i]);
+    }
+}
+
+// Check empty space on TX FIFO
+uint8_t USART2_Check_TxFifo_Space(void)
+{
+    if(usart2_buffer.tx_head == usart2_buffer.tx_tail)
+        return (USART_FIFO_SIZE-1);
+    else
+        return (usart2_buffer.tx_head - usart2_buffer.tx_tail);
+}
+
+// Check the number unreceived bytes on RX FIFO
+uint8_t USART2_Check_RxFifo_Data_Size(void)
+{
+    return (usart2_buffer.rx_head - usart2_buffer.rx_tail);
 }
 
 // Gets TX Tail
