@@ -10,19 +10,17 @@
 // USART2_CK - GPIO PD7 - Pin 88
 
 #include "stm32f2xx_usart.h"
+#include "queue.h"
 #include "usart.h"
 
-typedef struct USART_Buffer_Tag
+typedef struct USART_FIFO_TAG
 {
-    uint8_t tx_buf[USART_FIFO_SIZE];
-    uint8_t tx_head;
-    uint8_t tx_tail;
-    uint8_t rx_buf[USART_FIFO_SIZE];
-    uint8_t rx_head;
-    uint8_t rx_tail;
-} USART_Buffer;
+    FIFO_T  super; 
+    uint8_t buf[USART_FIFO_SIZE];
+} USART_FIFO_T;
 
-static USART_Buffer usart2_buffer;
+static USART_FIFO_T usart2_tx_fifo;
+static USART_FIFO_T usart2_rx_fifo;
 
 // USART2 Init Function
 void USART2_Init(void)
@@ -31,6 +29,16 @@ void USART2_Init(void)
     GPIO_InitTypeDef  GPIO_InitStructure;
     USART_InitTypeDef USART_InitStructure;
     NVIC_InitTypeDef NVIC_InitStructure;
+    
+    // Initialize FIFOs
+    FIFO_Init((FIFO_T*) &usart2_tx_fifo,
+               &usart2_tx_fifo.buf,
+               USART_FIFO_SIZE,
+               sizeof(usart2_tx_fifo.buf[0]) / sizeof(uint8_t));
+    FIFO_Init((FIFO_T*) &usart2_rx_fifo,
+               &usart2_rx_fifo.buf,
+               USART_FIFO_SIZE,
+               sizeof(usart2_rx_fifo.buf[0]) / sizeof(uint8_t));
         
     // Enable AHB clock to GPIOD
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
@@ -83,32 +91,20 @@ void USART2_Init(void)
 // Sends one byte via the UART
 void USART2_Send_Byte(uint8_t data)
 {
-    // New FIFO head points to next available data slot
-    uint8_t new_head = ((usart2_buffer.tx_head + 1) & USART_FIFO_MASK);
-                         
-    // Overflow imminence, we should do something                     
-    if ( new_head == usart2_buffer.tx_tail)
-        return;
-
-    // Free space available, put data on TX FIFO and advance head
-    else
-    {
-        usart2_buffer.tx_buf[new_head] = data;
-        usart2_buffer.tx_head = new_head;
-        
-        // Turns on the TXE interrupt, so data can be sent via interrupt
-        USART_ITConfig (USART2, USART_IT_TXE , ENABLE);
-        
-        return;
-    }
+    // Puts the data on the FIFO
+    FIFO_Post((FIFO_T*) &usart2_tx_fifo, &data);    
+    
+    // Turns on the TX Empty interrupt for UART2
+    USART_ITConfig (USART2, USART_IT_TXE , ENABLE);
 }
 
 // Sends multiple bytes of data over the UART2
 // If there is no available space on the FIFO, returns without sending the data
+
 void USART2_Send_Packet(uint32_t length, uint8_t *data)
 {
     // You are trying to send more bytes than FIFO has space for.
-    if (length > USART2_Check_TxFifo_Space())
+    if (length > FIFO_AvailableSpace(&usart2_tx_fifo))
         return;
     // FIFO has available space for your data
     else 
@@ -119,22 +115,10 @@ void USART2_Send_Packet(uint32_t length, uint8_t *data)
     }
 }
 
-
 // Gets one byte received via UART from the buffer
 void USART2_Receive_Byte(uint8_t *data)
 {
-    // Underflow, we should do something
-     if(usart2_buffer.rx_head == usart2_buffer.rx_tail)
-        return;
-    
-     // New data has arrived, get the next byte
-     else
-     {
-         uint8_t new_tail = ((usart2_buffer.rx_tail + 1) & USART_FIFO_MASK);   
-        
-         *data = usart2_buffer.rx_buf[new_tail];
-         usart2_buffer.rx_tail = new_tail;      
-     } 
+    FIFO_Get(&usart2_tx_fifo,data);
 }
 
 // Gets one byte received via UART from the buffer

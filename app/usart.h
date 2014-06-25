@@ -12,12 +12,7 @@
 #define USART_FLOWCTRL      (USART_HardwareFlowControl_None)
 #define USART_MODE          (USART_Mode_Rx | USART_Mode_Tx)
 
-#define USART_FIFO_SIZE (128)
-#define USART_FIFO_MASK (USART_FIFO_SIZE-1)
-
-#if ( USART_FIFO_SIZE & USART_FIFO_MASK )
-    #error RX buffer size is not a power of 2
-#endif
+#define USART_FIFO_SIZE     (128)
 
 // Public members
 

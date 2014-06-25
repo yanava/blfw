@@ -1953,12 +1953,12 @@
     </file>
   </group>
   <group>
-    <name>QUEUE</name>
+    <name>FIFO</name>
     <file>
-      <name>$PROJ_DIR$\queue.c</name>
+      <name>$PROJ_DIR$\fifo.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\queue.h</name>
+      <name>$PROJ_DIR$\fifo.h</name>
     </file>
   </group>
   <group>

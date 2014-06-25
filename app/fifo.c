@@ -1,12 +1,13 @@
-// QUEUE.C
-// Source file for GENERIC QUEUE routines
+// FIFO.C
+// Source file for GENERIC FIFO routines
 // MAH - 06/2014 - Initial Version
 
 #include <stdint.h>
 #include <string.h>
-#include "queue.h"
+#include "fifo.h"
 
-void QUEUE_Ctor(QUEUE *me, void *buffer, uint8_t elements, size_t element_size)
+// FIFO constructor 
+void FIFO_Init(FIFO_T *me, void *buffer, uint8_t elements, size_t element_size)
 {
     me->elements = elements;
     me->element_size = element_size;
@@ -15,9 +16,10 @@ void QUEUE_Ctor(QUEUE *me, void *buffer, uint8_t elements, size_t element_size)
     me->tail = (uint8_t *) buffer;    
 }
 
-// Puts new element on Queue
-void QUEUE_Post(QUEUE *me, void *element)
+// Puts new element on FIFO
+void FIFO_Post(FIFO_T *me, void *element)
 { 
+    // New head
     uint8_t *new_head = me->head + me->element_size;
     
     // Head wrapping around
@@ -27,7 +29,7 @@ void QUEUE_Post(QUEUE *me, void *element)
     // Overflow, we should do something
     if (new_head == me->tail)
         return;
-    // Adds a member to the Queue and advance head
+    // Adds a member to the FIFO and advance head
     else
     {
         memcpy(new_head,element,(size_t) me->element_size);  
@@ -35,13 +37,13 @@ void QUEUE_Post(QUEUE *me, void *element)
     }  
 }
 
-// Gets an element from the Queue
-void QUEUE_Get(QUEUE *me, void *element)
+// Gets an element from the FIFO
+void FIFO_Get(FIFO_T *me, void *element)
 {     
     // Tail caught up with head, nothing to do
     if (me->tail == me->head)
         return;
-    // Gets the member from the Queue and advance tail
+    // Gets the member from the FIFO and advance tail
     else
     {
         // New tail
@@ -56,11 +58,11 @@ void QUEUE_Get(QUEUE *me, void *element)
     }  
 }
 
-// Gets the available space on the queue
+// Gets the available space on the FIFO
 // The minus one comes from the fact that Head == Tail is only acceptable as 
-// a Queue empty condition. So, for all practical purposes, you got one less
+// a FIFO empty condition. So, for all practical purposes, you got one less
 // space available to fill the Queue. 
-uint8_t QUEUE_AvailableSpace(QUEUE *me)
+uint8_t FIFO_AvailableSpace(FIFO_T *me)
 {
     // Head == Tail -> Queue is free!
     if(me->head == me->tail)

@@ -4,10 +4,10 @@
 #include "usart.h"
 #include "dac.h"
 #include "fsm.h"
-#include "queue.h"
+#include "fifo.h"
 
 
-QUEUE testQueue; 
+FIFO_T testQueue; 
 
 typedef struct teststruct_tag
 {
@@ -24,29 +24,29 @@ void main(void)
     
     uint8_t space = 0; 
     
-    QUEUE_Ctor(&testQueue,&teste,4,sizeof(teste[0])/sizeof(uint8_t));
+    FIFO_Ctor(&testQueue,&teste,4,sizeof(teste[0])/sizeof(uint8_t));
     
-    space = QUEUE_AvailableSpace(&testQueue);
+    space = FIFO_AvailableSpace(&testQueue);
     
     teststruct_t element = {1,2,3};
     teststruct_t sample;
     
-    QUEUE_Post(&testQueue,&element);
+    FIFO_Post(&testQueue,&element);
     
-    space = QUEUE_AvailableSpace(&testQueue);
+    space = FIFO_AvailableSpace(&testQueue);
     
-    QUEUE_Post(&testQueue,&element);
-    QUEUE_Post(&testQueue,&element);
+    FIFO_Post(&testQueue,&element);
+    FIFO_Post(&testQueue,&element);
 
-    space = QUEUE_AvailableSpace(&testQueue);
+    space = FIFO_AvailableSpace(&testQueue);
     
-    QUEUE_Get(&testQueue,&sample);
+    FIFO_Get(&testQueue,&sample);
     
-    space = QUEUE_AvailableSpace(&testQueue);
+    space = FIFO_AvailableSpace(&testQueue);
       
-    QUEUE_Post(&testQueue,&element);
+    FIFO_Post(&testQueue,&element);
     
-    space = QUEUE_AvailableSpace(&testQueue);
+    space = FIFO_AvailableSpace(&testQueue);
     
     GPIO_InitTypeDef  GPIO_InitStructure;
     
