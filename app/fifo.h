@@ -14,13 +14,22 @@ typedef struct FIFO_TAG
     uint8_t    *base;
     uint8_t    *head;
     uint8_t    *tail;
-    uint8_t     elements;
+    uint32_t    elements;
     size_t      element_size;
 } FIFO_T;
 
-void FIFO_Init(FIFO_T *me, void *buffer, uint8_t elements, size_t element_size);
-void FIFO_Post(FIFO_T *me, void *element);
-void FIFO_Get(FIFO_T *me, void *element);
-uint8_t FIFO_AvailableSpace(FIFO_T *me);
+// Return values
+enum FIFO_RETURN_VAL
+{
+    FIFO_SUCCESS    = 0,
+    FIFO_OVERFLOW   = -1,
+    FIFO_UNDERFLOW  = -2
+};
 
-#endif // __QUEUE_H_
+// Prototypes
+void       FIFO_Init(FIFO_T *me, void *buffer, uint8_t elements, size_t element_size);
+int        FIFO_Post(FIFO_T *me, void *element);
+int        FIFO_Get(FIFO_T *me, void *element);
+uint32_t   FIFO_AvailableElements(FIFO_T *me);
+
+#endif // __FIFO_H_

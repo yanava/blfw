@@ -10,13 +10,13 @@
 // USART2_CK - GPIO PD7 - Pin 88
 
 #include "stm32f2xx_usart.h"
-#include "queue.h"
+#include "fifo.h"
 #include "usart.h"
 
 typedef struct USART_FIFO_TAG
 {
-    FIFO_T  super; 
-    uint8_t buf[USART_FIFO_SIZE];
+    FIFO_T   super; 
+    uint8_t  buf[USART_FIFO_SIZE];
 } USART_FIFO_T;
 
 static USART_FIFO_T usart2_tx_fifo;
@@ -92,7 +92,7 @@ void USART2_Init(void)
 void USART2_Send_Byte(uint8_t data)
 {
     // Puts the data on the FIFO
-    FIFO_Post((FIFO_T*) &usart2_tx_fifo, &data);    
+    FIFO_Post(&usart2_tx_fifo.super, &data);    
     
     // Turns on the TX Empty interrupt for UART2
     USART_ITConfig (USART2, USART_IT_TXE , ENABLE);
@@ -102,10 +102,11 @@ void USART2_Send_Byte(uint8_t data)
 // If there is no available space on the FIFO, returns without sending the data
 
 void USART2_Send_Packet(uint32_t length, uint8_t *data)
-{
+{    
     // You are trying to send more bytes than FIFO has space for.
-    if (length > FIFO_AvailableSpace(&usart2_tx_fifo))
+    if (length > FIFO_AvailableElements(&usart2_tx_fifo.super))
         return;
+   
     // FIFO has available space for your data
     else 
     { 
@@ -118,7 +119,8 @@ void USART2_Send_Packet(uint32_t length, uint8_t *data)
 // Gets one byte received via UART from the buffer
 void USART2_Receive_Byte(uint8_t *data)
 {
-    FIFO_Get(&usart2_tx_fifo,data);
+    // Gets a byte from the FIFO
+    FIFO_Get(&usart2_tx_fifo.super,data); 
 }
 
 // Gets one byte received via UART from the buffer
@@ -126,7 +128,7 @@ void USART2_Receive_Packet(uint8_t *data,  uint8_t length)
 {
     // You are trying to get more bytes from the FIFO than there are new
     // received bytes. 
-    if (length > USART2_Check_RxFifo_Data_Size())
+    if (length > FIFO_AvailableElements(&usart2_rx_fifo.super))
         return;
     // You are trying to get an OK amount of bytes
     else 
@@ -137,66 +139,14 @@ void USART2_Receive_Packet(uint8_t *data,  uint8_t length)
     }
 }
 
-// Check empty space on TX FIFO
-uint8_t USART2_Check_TxFifo_Space(void)
+// Gets the USART TX FIFO as a pure FIFO structure
+FIFO_T* USART2_GetTXFifoT(void)
 {
-    if(usart2_buffer.tx_head == usart2_buffer.tx_tail)
-        return (USART_FIFO_SIZE-1);
-    else
-        return (usart2_buffer.tx_head - usart2_buffer.tx_tail);
+    return (&usart2_tx_fifo.super);
 }
 
-// Check the number unreceived bytes on RX FIFO
-uint8_t USART2_Check_RxFifo_Data_Size(void)
+// Gets the USART RX FIFO as a pure FIFO structure
+FIFO_T* USART2_GetRXFifoT(void)
 {
-    return (usart2_buffer.rx_head - usart2_buffer.rx_tail);
+    return (&usart2_rx_fifo.super);
 }
-
-// Gets TX Tail
-uint8_t USART2_Get_Tx_Tail(void)
-{
-    return usart2_buffer.tx_tail;
-}
-
-// Increments TX Tail
-void USART2_Increment_Tx_Tail (void)
-{
-    usart2_buffer.tx_tail++;
-}
-
-// Gets TX Head
-uint8_t USART2_Get_Tx_Head(void)
-{
-    return usart2_buffer.tx_head;
-}
-
-// Get data from TX Buf
-uint8_t USART2_DataFromTXBuf(uint8_t position) 
-{
-    return usart2_buffer.tx_buf[position];
-}
-
-// Gets RX Tail
-uint8_t USART2_Get_Rx_Tail(void)
-{
-    return usart2_buffer.rx_tail;
-}
-
-// Gets RX Head
-uint8_t USART2_Get_Rx_Head(void)
-{
-    return usart2_buffer.rx_head;
-}
-
-// Increments RX Head
-void USART2_Increment_Rx_Head(void)
-{
-    usart2_buffer.rx_head++;
-}
-
-// Put data on RX Buf
-void USART2_DataToRXBuf(uint8_t data, uint8_t position) 
-{
-    usart2_buffer.rx_buf[position] = data;
-}
-

@@ -230,7 +230,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>0000000</state>
+          <state>1111111</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -321,7 +321,7 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>0</state>
+          <state>3</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
@@ -330,7 +330,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>0</state>
+          <state>3</state>
         </option>
         <option>
           <name>CompilerMisraRules98</name>
@@ -1848,6 +1848,15 @@
     </file>
   </group>
   <group>
+    <name>FIFO</name>
+    <file>
+      <name>$PROJ_DIR$\fifo.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\fifo.h</name>
+    </file>
+  </group>
+  <group>
     <name>FSM</name>
     <file>
       <name>$PROJ_DIR$\fsm.c</name>
@@ -1950,15 +1959,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\src\stm32f2xx_wwdg.c</name>
-    </file>
-  </group>
-  <group>
-    <name>FIFO</name>
-    <file>
-      <name>$PROJ_DIR$\fifo.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\fifo.h</name>
     </file>
   </group>
   <group>

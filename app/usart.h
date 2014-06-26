@@ -5,6 +5,8 @@
 #ifndef __USART_H_
 #define __USART_H_
 
+#include "fifo.h"
+
 #define USART_BAUD          (115200)
 #define USART_WORDLENGTH    (USART_WordLength_8b)
 #define USART_STOPBITS      (USART_StopBits_1)
@@ -17,24 +19,14 @@
 // Public members
 
 void USART2_Init(void);
+
 void USART2_Send_Byte(uint8_t data);
-void USART2_Send_Data(uint8_t *data, uint8_t length);
 void USART2_Receive_Byte(uint8_t *data);
 
 void USART2_Send_Packet(uint32_t length, uint8_t *data);
 void USART2_Receive_Packet(uint8_t *data,  uint8_t length);
 
-uint8_t USART2_Check_TxFifo_Space(void);
-uint8_t USART2_Check_RxFifo_Data_Size (void);
-
-uint8_t USART2_Get_Tx_Tail(void);
-uint8_t USART2_Get_Tx_Head(void);
-void USART2_Increment_Tx_Tail (void);
-uint8_t USART2_DataFromTXBuf(uint8_t position);
-
-uint8_t USART2_Get_Rx_Tail(void);
-uint8_t USART2_Get_Rx_Head(void);
-void USART2_Increment_Rx_Head(void);
-void USART2_DataToRXBuf(uint8_t data, uint8_t position) ;
+FIFO_T* USART2_GetTXFifoT(void);
+FIFO_T* USART2_GetRXFifoT(void);
 
 #endif /* __USART_H_ */

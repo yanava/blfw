@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <intrinsics.h>
 #include "fifo.h"
 
 // FIFO constructor 
@@ -17,8 +18,10 @@ void FIFO_Init(FIFO_T *me, void *buffer, uint8_t elements, size_t element_size)
 }
 
 // Puts new element on FIFO
-void FIFO_Post(FIFO_T *me, void *element)
+int FIFO_Post(FIFO_T *me, void *element)
 { 
+    // Critical region, interrupts disabled
+    __disable_interrupt();
     // New head
     uint8_t *new_head = me->head + me->element_size;
     
@@ -26,26 +29,36 @@ void FIFO_Post(FIFO_T *me, void *element)
     if (new_head > me->base + (me->elements*me->element_size) - 1)
         new_head = me->base;
      
-    // Overflow, we should do something
+    // Overflow, return error code
     if (new_head == me->tail)
-        return;
+    {
+        // End of critical region, interrupts enabled again
+        __enable_interrupt();
+        return FIFO_OVERFLOW;
+    }
     // Adds a member to the FIFO and advance head
     else
     {
         memcpy(new_head,element,(size_t) me->element_size);  
         me->head = new_head;
-    }  
+        
+        // End of critical region, interrupts enabled again
+        __enable_interrupt();
+         return FIFO_SUCCESS;  
+    }
 }
 
 // Gets an element from the FIFO
-void FIFO_Get(FIFO_T *me, void *element)
+int FIFO_Get(FIFO_T *me, void *element)
 {     
-    // Tail caught up with head, nothing to do
+    // Tail caught up with head, return underflow
     if (me->tail == me->head)
-        return;
+        return FIFO_UNDERFLOW;
     // Gets the member from the FIFO and advance tail
     else
     {
+        // Critical region, interrupts disabled
+        __disable_interrupt();
         // New tail
         uint8_t *new_tail = me->tail + me->element_size;
     
@@ -55,6 +68,9 @@ void FIFO_Get(FIFO_T *me, void *element)
         
         memcpy(element,new_tail,(size_t) me->element_size);  
         me->tail = new_tail;
+        // End of critical region, interrupts enabled again
+        __enable_interrupt();
+         return FIFO_SUCCESS;  
     }  
 }
 
@@ -62,7 +78,7 @@ void FIFO_Get(FIFO_T *me, void *element)
 // The minus one comes from the fact that Head == Tail is only acceptable as 
 // a FIFO empty condition. So, for all practical purposes, you got one less
 // space available to fill the Queue. 
-uint8_t FIFO_AvailableSpace(FIFO_T *me)
+uint32_t FIFO_AvailableElements(FIFO_T *me)
 {
     // Head == Tail -> Queue is free!
     if(me->head == me->tail)

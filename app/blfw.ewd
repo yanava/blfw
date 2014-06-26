@@ -85,7 +85,7 @@
         </option>
         <option>
           <name>OCDynDriverList</name>
-          <state>ARMSIM_ID</state>
+          <state>STLINK_ID</state>
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
@@ -145,7 +145,7 @@
         </option>
         <option>
           <name>OverrideDefFlashBoard</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OCImagesOffset1</name>
@@ -1149,7 +1149,7 @@
         </option>
         <option>
           <name>CCSwoClockAuto</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCSwoClockEdit</name>
@@ -1166,7 +1166,7 @@
         <debug>1</debug>
         <option>
           <name>CThirdPartyDriverDll</name>
-          <state>###Uninitialized###</state>
+          <state>Browse to your third-party driver</state>
         </option>
         <option>
           <name>CThirdPartyLogFileCheck</name>
