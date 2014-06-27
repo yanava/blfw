@@ -7,8 +7,10 @@
 #include <intrinsics.h>
 #include "fifo.h"
 
+static int count = 0;
+
 // FIFO constructor 
-void FIFO_Init(FIFO_T *me, void *buffer, uint8_t elements, size_t element_size)
+void FIFO_Init(FIFO_T *me, void *buffer, uint32_t elements, size_t element_size)
 {
     me->elements = elements;
     me->element_size = element_size;
@@ -22,13 +24,16 @@ int FIFO_Post(FIFO_T *me, void *element)
 { 
     // Critical region, interrupts disabled
     __disable_interrupt();
+    
+    count++;
+    
     // New head
     uint8_t *new_head = me->head + me->element_size;
     
     // Head wrapping around
-    if (new_head > me->base + (me->elements*me->element_size) - 1)
+    if (new_head > me->base + ((me->elements-1)*me->element_size))
         new_head = me->base;
-     
+    
     // Overflow, return error code
     if (new_head == me->tail)
     {
@@ -44,7 +49,7 @@ int FIFO_Post(FIFO_T *me, void *element)
         
         // End of critical region, interrupts enabled again
         __enable_interrupt();
-         return FIFO_SUCCESS;  
+         return FIFO_NOERROR;  
     }
 }
 
@@ -63,14 +68,14 @@ int FIFO_Get(FIFO_T *me, void *element)
         uint8_t *new_tail = me->tail + me->element_size;
     
         // Tail wrapping around
-        if (new_tail > me->tail + (me->elements*me->element_size) - 1)
+        if (new_tail > me->base + ((me->elements-1)*me->element_size))
             new_tail = me->base;
         
         memcpy(element,new_tail,(size_t) me->element_size);  
         me->tail = new_tail;
         // End of critical region, interrupts enabled again
         __enable_interrupt();
-         return FIFO_SUCCESS;  
+         return FIFO_NOERROR;  
     }  
 }
 

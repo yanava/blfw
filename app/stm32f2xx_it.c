@@ -188,9 +188,10 @@ void USART2_IRQHandler(void)
         uint8_t data;
         
         // Gets data byte from USART2 TX FIFO
-        FIFO_Get(USART2_GetTXFifoT(), (void*) &data);
-        
-        USART_SendData(USART2, (uint16_t) data);
+        if (FIFO_Get(USART2_GetTXFifoT(), (void*) &data) == FIFO_UNDERFLOW)
+            USART_ITConfig (USART2, USART_IT_TXE , DISABLE);
+        else 
+            USART_SendData(USART2, (uint16_t) data);
     }
 }
   
