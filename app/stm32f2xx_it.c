@@ -32,6 +32,7 @@
 #include "systick.h"
 #include "fifo.h"
 #include "usart.h"
+#include "adc12.h"
 
 /** @addtogroup Template_Project
   * @{
@@ -166,8 +167,7 @@ void SysTick_Handler(void)
   * @}
   */ 
 
-// USART2 ISR. This should not be here, but it is. Try to move it if you feel
-// unconfortable, but I advise: It's hard. 
+// USART2 ISR
 void USART2_IRQHandler(void)
 { 
     // Receive Interrupt
@@ -193,6 +193,16 @@ void USART2_IRQHandler(void)
         else 
             USART_SendData(USART2, (uint16_t) data);
     }
+}
+
+// DMA2_Stream ISR
+void DMA2_Stream0_IRQHandler(void)
+{
+  if (DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) != RESET)
+  {
+    ADC12_HandleData();  
+    DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
+  }
 }
   
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

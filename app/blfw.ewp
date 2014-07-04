@@ -1839,6 +1839,15 @@
     </settings>
   </configuration>
   <group>
+    <name>ADC12</name>
+    <file>
+      <name>$PROJ_DIR$\adc12.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\adc12.h</name>
+    </file>
+  </group>
+  <group>
     <name>DAC</name>
     <file>
       <name>$PROJ_DIR$\dac.c</name>
@@ -1980,6 +1989,24 @@
     </file>
     <file>
       <name>$PROJ_DIR$\usart.h</name>
+    </file>
+  </group>
+  <group>
+    <name>UTILS</name>
+    <file>
+      <name>$PROJ_DIR$\utils.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\utils.h</name>
+    </file>
+  </group>
+  <group>
+    <name>WIFI</name>
+    <file>
+      <name>$PROJ_DIR$\apitypes.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\wifi_bglib.h</name>
     </file>
   </group>
   <file>

@@ -6,15 +6,17 @@
 #include "fsm.h"
 #include "fifo.h"
 
+#include "wifi_bglib.h"
+
 // Main function. Here's where the action happens!
 void main(void)
 {   
     SYSTICK_Init();    // System timer tick initialization
     DAC_HwInit();      // DAC Init
     USART2_Init();     // USART2 Init - Wifi
-
+        
     // Main loop will execute forever
-    for(;;)
+    while(1)
     {
         
     }
