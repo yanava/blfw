@@ -4,7 +4,6 @@
 #include "stm32f2xx.h"
 
 void ADC12_Init(void);
-void ADC12_Tick(void);
-void ADC12_HandleData(void);
+void ADC12_Timertic(void);
 
 #endif /* __ADC12_H */
