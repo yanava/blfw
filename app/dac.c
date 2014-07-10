@@ -2,7 +2,7 @@
 
 // Standard VREF+ is considered to be 3300mV, by circuit design. A different 
 // board could have a different value for VREF+
-uint16_t vref_plus = 3300; 
+#define DAC_VREF_PLUS (3300)
 
 void DAC_HwInit()
 {
@@ -27,7 +27,7 @@ void DAC_HwInit()
     // an LMC6484 for that purpose on the board. 
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_None;
     DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_None;
-    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
+    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Disable;
 
     DAC_Init(DAC_Channel_1, &DAC_InitStructure);
     DAC_Init(DAC_Channel_2, &DAC_InitStructure);
@@ -42,10 +42,10 @@ void DAC_HwInit()
 int DAC_SetDAC1ValInMilivolts(uint16_t val)
 {
     // If value is above reference voltage, return an error
-    if (val > vref_plus) return DAC_VALUE_OUTSIDE_BOUNDARIES;
+    if (val > DAC_VREF_PLUS) return DAC_VALUE_OUTSIDE_BOUNDARIES;
     
     // Set the voltage using the formula on Page 152 of UM1061
-    DAC_SetChannel1Data(DAC_Align_12b_R, val * DAC_MAX_VALUE / vref_plus);
+    DAC_SetChannel1Data(DAC_Align_12b_R, val * DAC_MAX_VALUE / DAC_VREF_PLUS);
     
     // If everything went right, no error is returned
     return DAC_NOERROR;
@@ -55,10 +55,10 @@ int DAC_SetDAC1ValInMilivolts(uint16_t val)
 int DAC_SetDAC2ValInMilivolts(uint16_t val)
 {
     // If value is above reference voltage, return an error
-    if (val > vref_plus) return DAC_VALUE_OUTSIDE_BOUNDARIES;
+    if (val > DAC_VREF_PLUS) return DAC_VALUE_OUTSIDE_BOUNDARIES;
     
     // Set the voltage using the formula on Page 152 of UM1061
-    DAC_SetChannel2Data(DAC_Align_12b_R, val * DAC_MAX_VALUE / vref_plus);
+    DAC_SetChannel2Data(DAC_Align_12b_R, val * DAC_MAX_VALUE / DAC_VREF_PLUS);
     
     // If everything went right, no error is returned
     return DAC_NOERROR;
@@ -68,13 +68,13 @@ int DAC_SetDAC2ValInMilivolts(uint16_t val)
 int DAC_SetBothDacsInMilivolts(uint16_t dac1_val, uint16_t dac2_val)
 {
     // If either value is above reference voltage, return an error
-    if (dac1_val > vref_plus || dac2_val > vref_plus) 
+    if (dac1_val > DAC_VREF_PLUS || dac2_val > DAC_VREF_PLUS) 
         return DAC_VALUE_OUTSIDE_BOUNDARIES;
     
     // Set both voltages using the formula on Page 152 of UM1061
     DAC_SetDualChannelData(DAC_Align_12b_R, 
-                           dac2_val * DAC_MAX_VALUE / vref_plus,
-                           dac1_val * DAC_MAX_VALUE / vref_plus);
+                           dac2_val * DAC_MAX_VALUE / DAC_VREF_PLUS,
+                           dac1_val * DAC_MAX_VALUE / DAC_VREF_PLUS);
 
     // If everything went right, no error is returned
     return DAC_NOERROR;

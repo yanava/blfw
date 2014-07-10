@@ -1971,6 +1971,9 @@
     </file>
   </group>
   <group>
+    <name>SOLAR</name>
+  </group>
+  <group>
     <name>startup</name>
     <file>
       <name>$PROJ_DIR$\..\Libraries\CMSIS\Device\ST\STM32F2xx\Source\Templates\iar\startup_stm32f2xx.s</name>

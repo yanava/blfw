@@ -195,20 +195,12 @@ void USART2_IRQHandler(void)
     }
 }
 
-extern uint16_t adc12buf[]; 
-uint16_t data[128];
-int count = 0;
-
 // DMA2_Stream ISR
 void DMA2_Stream0_IRQHandler(void)
 {
     if (DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) != RESET)
     {
-        // PUT SOMETHING TO GET DATA OUT OF THE BUFFER HERE
-        data[count] = adc12buf[4];
-        count++;
-        if(count > 127) count = 0;
-        
+        ADC12_FilterDMASamples();        
         DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
     }
 }

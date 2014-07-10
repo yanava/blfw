@@ -1,9 +1,17 @@
-
+// ADC12.C
+// Source file for ADC routines
+// EB - 07/2014 - Initial Version
 
 #include "adc12.h"
 
+// ADC IIR Filter Coefficients
+#define ADC_IIR_C0  (0.99f)             
+#define ADC_IIR_C1  (1.0f-ADC_IIR_C0)
+
 // Number of used ADC Channels
-#define ADC12_NUM_OF_CHANNELS   6  
+#define ADC12_NUM_OF_CHANNELS   (6)  
+#define ADC12_MAX_VALUE         (4095)
+#define ADC12_VREF_PLUS         (3300)
 
 // ADC1 address as stated in RM0033 PG51 and 249
 #define ADC_CDR_ADDRESS         ((uint32_t)0x4001204C) 
@@ -14,9 +22,19 @@
 /* Time interval for reporting all measures */
 #define MEASURE_REPORT_TIME_MS  1000
 
-// ADC Buffer. DMA will fill this buffer. 
-__IO uint16_t adc12buf[ADC12_NUM_OF_CHANNELS];
+// ADC DMA Buffer, which contain "Live" samples
+static volatile uint16_t adc_dma_buffer[ADC12_NUM_OF_CHANNELS];
 
+// ADC Output Buffer, that has IIR Filtered samples
+static volatile float adc_output_buffer[ADC12_NUM_OF_CHANNELS];
+
+// Get ADC Output Buffer
+float ADC12_GetOutputBufferSample(enum ADC12_CHANNELS const ch)
+{
+    return (adc_output_buffer[ch]);
+}
+
+// Init structure
 void ADC12_Init(void)
 {
     // Init structures required to put the ADC to work
@@ -44,7 +62,7 @@ void ADC12_Init(void)
     // Initialize the DMA to get the samples from the ADC
     DMA_InitStructure.DMA_Channel = DMA_Channel_0;  
     DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) ADC_CDR_ADDRESS;
-    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &adc12buf;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &adc_dma_buffer;
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
     DMA_InitStructure.DMA_BufferSize = ADC12_NUM_OF_CHANNELS;
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
@@ -126,6 +144,24 @@ void ADC12_Init(void)
     ADC_SoftwareStartConv(ADC1);
 
 }
+
+// Calculates a simple IIR filtered sample 
+float ADC12_IIRFilterSamples(float yn_1, float xn)
+{
+    return (ADC_IIR_C0*yn_1 + ADC_IIR_C1*xn);
+}
+
+void ADC12_FilterDMASamples(void)
+{
+    for (int i=0 ; i < ADC12_NUM_OF_CHANNELS; i++)
+    {
+        float xn = adc_dma_buffer[i] * ADC12_VREF_PLUS / ADC12_MAX_VALUE; 
+        
+        adc_output_buffer[i] = ADC12_IIRFilterSamples(adc_output_buffer[i],xn);
+    
+    }   
+}
+
 
 void ADC12_Timertic(void)
 {
