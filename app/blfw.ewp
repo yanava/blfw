@@ -1972,6 +1972,12 @@
   </group>
   <group>
     <name>SOLAR</name>
+    <file>
+      <name>$PROJ_DIR$\IV.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\IV.h</name>
+    </file>
   </group>
   <group>
     <name>startup</name>

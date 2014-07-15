@@ -7,8 +7,6 @@
 #include <intrinsics.h>
 #include "fifo.h"
 
-static int count = 0;
-
 // FIFO constructor 
 void FIFO_Init(FIFO_T *me, void *buffer, uint32_t elements, size_t element_size)
 {
@@ -24,8 +22,6 @@ int FIFO_Post(FIFO_T *me, void *element)
 { 
     // Critical region, interrupts disabled
     __disable_interrupt();
-    
-    count++;
     
     // New head
     uint8_t *new_head = me->head + me->element_size;
