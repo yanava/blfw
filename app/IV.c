@@ -9,7 +9,7 @@
 #include "adc12.h"
 
 #define IV_SENSE_RESISTOR  (0.1f)
-#define IV_VOLTAGE_DIVIDER (0.02994012f)
+#define IV_VOLTAGE_DIVIDER (33.4f)
 
 typedef struct IV_EVENT_TAG
 {
@@ -27,6 +27,7 @@ typedef struct IV_TRACER_TAG
 {
     FSM super;
     IV_EVENT_LIST_T events;
+    float voltage;
     uint32_t point_delay_ms;
     uint32_t point_delay_counter;
 } IV_TRACER_T;
@@ -41,7 +42,7 @@ static IV_TRACER_T iv_tracer;
 
 FSM_State IV_HAND_INITIAL(IV_TRACER_T *me, FSM_Event *e);
 FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e);
-int IV_Post_Event(IV_TRACER_T *me, FSM_Event *e);
+int IV_Post_Event(IV_TRACER_T *me, IV_EVENT_T *e);
 
 // Initial state. Just performs the initial transition
 FSM_State IV_HAND_INITIAL(IV_TRACER_T *me, FSM_Event *e)
@@ -63,8 +64,7 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
             me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
         case IV_POINT_DELAY_TIMEOUT:
-            // Get current ADC value (needs function);
-            ADC12_GetOutputBufferSample(ADC12_CH1);
+            me->voltage = ADC12_GetOutputBufferSample(ADC12_CH1)*IV_VOLTAGE_DIVIDER;
             return FSM_HANDLED();
         case FSM_EXIT_SIGNAL:
             return FSM_HANDLED();   
@@ -75,13 +75,24 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
 }
 
 // Post an event to the IV Event list
-int IV_Post_Event(IV_TRACER_T *me, FSM_Event *e)
+int IV_Post_Event(IV_TRACER_T *me, IV_EVENT_T *iv_e)
 {       
     FIFO_T* element_list_as_fifo = (FIFO_T *) &me->events;
     
-    int result = FIFO_Post(element_list_as_fifo, e);
+    int result = FIFO_Post(element_list_as_fifo, iv_e);
     
     return result; 
+}
+
+// Set the current to draw from panel
+void IV_Test(uint16_t current_in_ma)
+{
+    IV_EVENT_T iv_e;
+    
+    iv_e.super.signal = IV_GET_POINT;
+    iv_e.dac_val = current_in_ma / 10;
+    
+    IV_Post_Event(&iv_tracer, &iv_e);    
 }
 
 
@@ -107,24 +118,24 @@ void IV_Init(void)
 // Event dispatcher for IV Curve tracer
 void IV_Process(void)
 {
-   FSM_Event e;
+   IV_EVENT_T evt;
   
-   if (FIFO_Get(&iv_tracer.events.super, &e) == FIFO_NOERROR)
-       FSM_Dispatch (&iv_tracer.super, &e);  
+   if (FIFO_Get(&iv_tracer.events.super, &evt) == FIFO_NOERROR)
+       FSM_Dispatch (&iv_tracer.super, &evt.super);  
 }
 
 // IV Timertick
 void IV_Timertick (void)
 {
-    FSM_Event e; 
+    IV_EVENT_T iv_e; 
 
     if(iv_tracer.point_delay_counter > 0)
     {
         iv_tracer.point_delay_counter--;
-        if (iv_tracer.point_delay_counter == 0);
+        if (iv_tracer.point_delay_counter == 0)
         {
-            e.signal = IV_POINT_DELAY_TIMEOUT;
-            IV_Post_Event(&iv_tracer,&e);
+            iv_e.super.signal = IV_POINT_DELAY_TIMEOUT;
+            IV_Post_Event(&iv_tracer, &iv_e);
         }
     }
 }

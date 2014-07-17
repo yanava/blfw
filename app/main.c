@@ -17,6 +17,8 @@ void main(void)
     USART2_Init ();    // USART2 Init - Wifi
     IV_Init     ();    // IV Curve Tracer Initialization
     
+    IV_Test(200);
+    
     // Main loop will execute forever
     while(1)
     {
