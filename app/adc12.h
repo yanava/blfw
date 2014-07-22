@@ -20,6 +20,6 @@ enum ADC12_CHANNELS
 void ADC12_Init(void);
 void ADC12_Timertic(void);
 void ADC12_FilterDMASamples(void);
-float ADC12_GetOutputBufferSample(enum ADC12_CHANNELS const ch);
+uint16_t ADC12_GetOutputBufferSample(enum ADC12_CHANNELS const ch);
 
 #endif /* __ADC12_H */

@@ -3,13 +3,15 @@
 
 #include "stm32f2xx.h"
 
-#define  DAC_MAX_VALUE  (4095)
+#define  DAC_VREF_PLUS      (3300)
+#define  DAC_MAX_VALUE      (4095)
+#define  DAC_SCALE_FACTOR   (1000)
 
 // Return values
 enum DAC_RETURN_VAL
 {
     DAC_NOERROR     = 0,
-    DAC_VALUE_OUTSIDE_BOUNDARIES = -1
+    DAC_VALUE_OUTSIDE_BOUNDARIES = -1,
 };
 
 void DAC_HwInit(void);

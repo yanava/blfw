@@ -1,9 +1,5 @@
 #include "dac.h"
 
-// Standard VREF+ is considered to be 3300mV, by circuit design. A different 
-// board could have a different value for VREF+
-#define DAC_VREF_PLUS (3300)
-
 void DAC_HwInit()
 {
     
@@ -27,7 +23,7 @@ void DAC_HwInit()
     // an LMC6484 for that purpose on the board. 
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_None;
     DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_None;
-    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Disable;
+    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
 
     DAC_Init(DAC_Channel_1, &DAC_InitStructure);
     DAC_Init(DAC_Channel_2, &DAC_InitStructure);
@@ -35,8 +31,9 @@ void DAC_HwInit()
     // Enables both channels
     DAC_Cmd(DAC_Channel_1, ENABLE);
     DAC_Cmd(DAC_Channel_2, ENABLE);
-
+    
 }
+
 
 // Set DAC1 Value in Milivolts
 int DAC_SetDAC1ValInMilivolts(uint16_t val)
@@ -46,7 +43,7 @@ int DAC_SetDAC1ValInMilivolts(uint16_t val)
     
     // Set the voltage using the formula on Page 152 of UM1061
     DAC_SetChannel1Data(DAC_Align_12b_R, val * DAC_MAX_VALUE / DAC_VREF_PLUS);
-    
+           
     // If everything went right, no error is returned
     return DAC_NOERROR;
 }
