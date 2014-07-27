@@ -6,8 +6,8 @@
 
 // ADC IIR Filter Coefficients
 // I made a very cool Excel to show these are good values
-#define ADC_IIR_C0  (95)             
-#define ADC_IIR_C1  (100-ADC_IIR_C0)
+#define ADC_IIR_C0  (0.8f)             
+#define ADC_IIR_C1  (1.00f-ADC_IIR_C0)
 
 // Number of used ADC Channels
 #define ADC12_NUM_OF_CHANNELS   (6)  
@@ -32,7 +32,7 @@ static uint16_t adc_output_buffer[ADC12_NUM_OF_CHANNELS];
 // Get ADC Output Buffer
 uint16_t ADC12_GetOutputBufferSample(enum ADC12_CHANNELS const ch)
 {
-    return (adc_output_buffer[ch]);
+    return ((uint16_t) (adc_output_buffer[ch]*ADC12_VREF_PLUS/ADC12_MAX_VALUE));
 }
 
 // Init structure
@@ -149,9 +149,9 @@ void ADC12_Init(void)
 // Calculates a simple IIR filtered sample 
 uint16_t ADC12_IIRFilterSamples(uint16_t yn_1, uint16_t xn)
 {
-    uint32_t result = (ADC_IIR_C0*yn_1 + ADC_IIR_C1*xn) / (ADC_IIR_C0+ADC_IIR_C1); 
+    uint16_t result = (uint16_t) ((ADC_IIR_C0*yn_1 + ADC_IIR_C1*xn));
     
-    return ((uint16_t) (result));
+    return ((result));
 }
 
 // Filters the samples for all DMA channels

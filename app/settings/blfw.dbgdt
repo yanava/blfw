@@ -40,7 +40,7 @@
           
           
           
-        <item>iv_tracer</item><item>count</item><item>adc_output_buffer</item><item/></expressions>
+        <item>iv_tracer</item><item></item></expressions>
         <col-names>
           
           
@@ -53,30 +53,14 @@
           
           
         <item>150</item><item>150</item><item>100</item><item>215</item></col-widths>
-      </WATCH_1>
-    <DRIVER_TIMELINE_GRAPH><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></DRIVER_TIMELINE_GRAPH><DRIVER_INTERRUPT_LOG><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item>Execution Time</item><item>Interrupt</item><item>Program Counter</item><item>Status</item><item>Time</item></col-names><col-widths><item>180</item><item>300</item><item>100</item><item>120</item><item>180</item></col-widths></DRIVER_INTERRUPT_LOG><DRIVER_DATA_LOG><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item>Program Counter</item><item>Time</item></col-names><col-widths><item>130</item><item>180</item></col-widths></DRIVER_DATA_LOG><Tool-Output/><Locals><col-names><item>Location</item><item>Type</item><item>Value</item><item>Variable</item></col-names><col-widths><item>150</item><item>100</item><item>134</item><item>131</item></col-widths></Locals><PHYSBPWIN><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item>#</item><item>Breakpoint</item></col-names><col-widths><item>60</item><item>400</item></col-widths></PHYSBPWIN></Static>
+      <PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Locals</Factory></Window><Window><Factory>StaticWatch</Factory></Window><Window><Factory>Auto</Factory></Window></Windows></PreferedWindows></WATCH_1>
+    <DRIVER_TIMELINE_GRAPH><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></DRIVER_TIMELINE_GRAPH><DRIVER_INTERRUPT_LOG><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item>Execution Time</item><item>Interrupt</item><item>Program Counter</item><item>Status</item><item>Time</item></col-names><col-widths><item>180</item><item>300</item><item>100</item><item>120</item><item>180</item></col-widths></DRIVER_INTERRUPT_LOG><DRIVER_DATA_LOG><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item>Program Counter</item><item>Time</item></col-names><col-widths><item>130</item><item>180</item></col-widths></DRIVER_DATA_LOG><Tool-Output/><Locals><col-names><item>Location</item><item>Type</item><item>Value</item><item>Variable</item></col-names><col-widths><item>150</item><item>100</item><item>134</item><item>131</item></col-widths><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>WATCH_1</Factory></Window><Window><Factory>StaticWatch</Factory></Window><Window><Factory>Auto</Factory></Window></Windows></PreferedWindows></Locals><PHYSBPWIN><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item>#</item><item>Breakpoint</item></col-names><col-widths><item>60</item><item>400</item></col-widths></PHYSBPWIN><StaticWatch><expressions><item>iv_tracer.curve.points</item><item></item></expressions><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>100</item><item>150</item><item>100</item><item>100</item></col-widths><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>WATCH_1</Factory></Window><Window><Factory>Locals</Factory></Window><Window><Factory>Auto</Factory></Window></Windows></PreferedWindows></StaticWatch><TerminalIO><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><InputSource>1</InputSource><InputMode>10</InputMode><Filename>$PROJ_DIR$\TermIOInput.txt</Filename><InputEcho>1</InputEcho><ShowReset>0</ShowReset></TerminalIO><Extra-Trace><col-names><item>Comment</item><item>Cycles</item><item>Event</item><item>Index</item><item>SWO Packet</item><item>Trace</item><item>Value</item></col-names><col-widths><item>400</item><item>100</item><item>200</item><item>70</item><item>100</item><item>300</item><item>100</item></col-widths><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Extra-Trace><Auto><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>WATCH_1</Factory></Window><Window><Factory>Locals</Factory></Window><Window><Factory>StaticWatch</Factory></Window></Windows></PreferedWindows><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>100</item><item>150</item><item>100</item><item>100</item></col-widths></Auto></Static>
     <Windows>
       
       
       
       
-    <Wnd4>
-        <Tabs>
-          <Tab>
-            <Identity>TabID-22144-16183</Identity>
-            <TabName>Debug Log</TabName>
-            <Factory>Debug-Log</Factory>
-            <Session/>
-          </Tab>
-          <Tab>
-            <Identity>TabID-21621-16193</Identity>
-            <TabName>Build</TabName>
-            <Factory>Build</Factory>
-            <Session/>
-          </Tab>
-        <Tab><Identity>TabID-9021-2372</Identity><TabName>Tool Output</TabName><Factory>Tool-Output</Factory><Session/></Tab></Tabs>
-        
-      <SelectedTab>0</SelectedTab></Wnd4><Wnd5>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-125-16186</Identity>
@@ -88,29 +72,30 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd5><Wnd6>
-        <Tabs>
-          <Tab>
-            <Identity>TabID-20011-17656</Identity>
-            <TabName>Watch 1</TabName>
-            <Factory>WATCH_1</Factory>
-          </Tab>
-        <Tab><Identity>TabID-20323-5989</Identity><TabName>Locals</TabName><Factory>Locals</Factory></Tab></Tabs>
-        
-      <SelectedTab>0</SelectedTab></Wnd6><Wnd7><Tabs><Tab><Identity>TabID-18059-15284</Identity><TabName>Disassembly</TabName><Factory>Disassembly</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd7></Windows>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-9021-2372</Identity><TabName>Tool Output</TabName><Factory>Tool-Output</Factory><Session/></Tab><Tab>
+            <Identity>TabID-22144-16183</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab><Tab>
+            <Identity>TabID-21621-16193</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab></Tabs><SelectedTab>1</SelectedTab></Wnd1><Wnd3><Tabs><Tab><Identity>TabID-6089-7507</Identity><TabName>Watch 1</TabName><Factory>WATCH_1</Factory></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\IV.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>3</YPos2><SelStart2>774</SelStart2><SelEnd2>774</SelEnd2></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\dac.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>128</SelStart2><SelEnd2>128</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\dac.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>20</SelStart2><SelEnd2>20</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane/><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-02f466f0><key>iaridepm.enu1</key></Toolbar-02f466f0></Sizes></Row0><Row1><Sizes><Toolbar-111dcd10><key>debuggergui.enu1</key></Toolbar-111dcd10></Sizes></Row1></Top><Left><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>730</Bottom><Right>305</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200602</sizeHorzCY><sizeVertCX>159896</sizeVertCX><sizeVertCY>734203</sizeVertCY></Rect></Wnd5></Sizes></Row0></Left><Right><Row0><Sizes><Wnd6><Rect><Top>-2</Top><Left>-2</Left><Bottom>365</Bottom><Right>583</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200602</sizeHorzCY><sizeVertCX>304688</sizeVertCX><sizeVertCY>368104</sizeVertCY></Rect></Wnd6><Wnd7><Rect><Top>0</Top><Left>0</Left><Bottom>0</Bottom><Right>7</Right><x>-2</x><y>363</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200602</sizeHorzCY><sizeVertCX>304688</sizeVertCX><sizeVertCY>368104</sizeVertCY></Rect></Wnd7></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>200602</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>200602</sizeVertCY></Rect></Wnd4></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-007f66f0><key>iaridepm.enu1</key></Toolbar-007f66f0></Sizes></Row0><Row1><Sizes><Toolbar-100eed80><key>debuggergui.enu1</key></Toolbar-100eed80></Sizes></Row1><Row2><Sizes><Toolbar-100eefd8><key>armstlink.enu1</key></Toolbar-100eefd8></Sizes></Row2></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>706</Bottom><Right>305</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200602</sizeHorzCY><sizeVertCX>159896</sizeVertCX><sizeVertCY>710130</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>706</Bottom><Right>419</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>200602</sizeHorzCY><sizeVertCX>219271</sizeVertCX><sizeVertCY>710130</sizeVertCY></Rect></Wnd3></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>200602</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>200602</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

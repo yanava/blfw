@@ -23,7 +23,7 @@ void DAC_HwInit()
     // an LMC6484 for that purpose on the board. 
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_None;
     DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_None;
-    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
+    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Disable;
 
     DAC_Init(DAC_Channel_1, &DAC_InitStructure);
     DAC_Init(DAC_Channel_2, &DAC_InitStructure);
@@ -31,6 +31,8 @@ void DAC_HwInit()
     // Enables both channels
     DAC_Cmd(DAC_Channel_1, ENABLE);
     DAC_Cmd(DAC_Channel_2, ENABLE);
+    
+    DAC_SetDAC1ValInMilivolts(10);
     
 }
 

@@ -12,8 +12,8 @@
 #define IV_CURRENT_CURVE_STEP       (100)
 #define IV_CURRENT_DAC_STEP         ((uint16_t) (IV_CURRENT_RESISTOR*IV_CURRENT_CURVE_STEP))
 #define IV_VOLTAGE_DIVIDER_FACTOR   (33.4f)
-#define IV_VOLTAGE_SC_TOL           (10)
-#define IV_DEFAULT_POINT_DELAY      (10)
+#define IV_VOLTAGE_SC_TOL           (500)
+#define IV_DEFAULT_POINT_DELAY      (5)
 #define IV_EVENT_LIST_SIZE          (10)
 #define IV_CURVE_SIZE               (DAC_VREF_PLUS / IV_CURRENT_DAC_STEP)
 
@@ -24,20 +24,22 @@ typedef struct IV_EVENT_TAG
     FSM_Event super;
 } IV_EVENT_T;
 
-// Event FIFO
+// Event FIFO type
 typedef struct IV_EVENT_LIST_TAG
 {
     FIFO_T     super;
     IV_EVENT_T list[IV_EVENT_LIST_SIZE];
 } IV_EVENT_LIST_T;
-
-// IV Point, with 2 
+ 
+// IV Point type
 typedef struct IV_POINT_TAG
 {
     uint16_t v;
     uint16_t i;
+    uint16_t correct_i;
 } IV_POINT_T;
 
+// IV Curve type
 typedef struct IV_CURVE_TAG
 {
     FIFO_T     super;
@@ -69,6 +71,7 @@ FSM_State IV_HAND_IDLE(IV_TRACER_T *me, FSM_Event *e);
 FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e);
 int IV_Post_Event(IV_TRACER_T *me, IV_EVENT_T *e);
 uint16_t IV_Get_Panel_Voltage(void);
+uint16_t IV_Get_Panel_Current(void);
 void IV_SetCurrent(uint16_t current_in_ma);
 
 // Initial state. Just performs the initial transition
@@ -89,8 +92,6 @@ FSM_State IV_HAND_IDLE(IV_TRACER_T *me, FSM_Event *e)
         case FSM_ENTRY_SIGNAL:                
             return FSM_HANDLED();
         case IV_START_NEW_CURVE:
-            me->last_point.i = 0;
-            IV_SetCurrent(me->last_point.i);
             return FSM_TRAN(me,IV_HAND_OPER);
         case FSM_EXIT_SIGNAL:
             return FSM_HANDLED();   
@@ -106,10 +107,13 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
     switch (e->signal)
     {
         case FSM_ENTRY_SIGNAL:
+            // Sets the point delay for first time
+            me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
         case IV_POINT_DELAY_TIMEOUT:
             // Gets Panel Voltage
             me->last_point.v = IV_Get_Panel_Voltage();
+            me->last_point.correct_i = IV_Get_Panel_Current();
             // Puts point on curve FIFO
             FIFO_Post(&me->curve.super, &me->last_point);
             // Increments current by a step
@@ -121,9 +125,11 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
         case IV_SHORT_CIRCUIT:
         case IV_DAC_FULL_SCALE:
             // Curve done
-            return FSM_TRAN(me,IV_HAND_OPER);
+            return FSM_TRAN(me,IV_HAND_IDLE);
         case FSM_EXIT_SIGNAL:
             // Set DAC to zero here, to reduce temperature
+            me->last_point.i = 0;
+            IV_SetCurrent(me->last_point.i);
             return FSM_HANDLED();   
     }
     // Default: Handled
@@ -131,14 +137,23 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
 }
 
 
-// Gets the panel voltage
+// Starts a new IV Curve
+void IV_Perform_Curve(void)
+{
+    IV_EVENT_T iv_e;
+    
+    iv_e.super.signal = IV_START_NEW_CURVE;
+    IV_Post_Event(&iv_tracer, &iv_e);  
+}
 
+// Gets the panel voltage
 uint16_t IV_Get_Panel_Voltage(void)
 {
     IV_EVENT_T iv_e;
     
     uint16_t voltage = (uint16_t) (ADC12_GetOutputBufferSample(ADC12_CH1)*IV_VOLTAGE_DIVIDER_FACTOR);
     
+    // If panel voltage drops too much, issues short circuit
     if (voltage <= IV_VOLTAGE_SC_TOL)
     {
         iv_e.super.signal = IV_SHORT_CIRCUIT;
@@ -146,6 +161,12 @@ uint16_t IV_Get_Panel_Voltage(void)
     }
     
     return (voltage); 
+}
+
+// Gets the panel voltage
+uint16_t IV_Get_Panel_Current(void)
+{    
+    return ((uint16_t) (ADC12_GetOutputBufferSample(ADC12_CH2)/IV_CURRENT_RESISTOR)); 
 }
 
 // Set the current to draw from panel
@@ -172,8 +193,6 @@ int IV_Post_Event(IV_TRACER_T *me, IV_EVENT_T *iv_e)
     
     return result; 
 }
-
-
 
 // Initialization function
 void IV_Init(void) 
