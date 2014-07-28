@@ -2,10 +2,8 @@
 #define __DAC_H
 
 #include "stm32f2xx.h"
-
-#define  DAC_VREF_PLUS      (3300)
 #define  DAC_MAX_VALUE      (4095)
-#define  DAC_SCALE_FACTOR   (1000)
+
 
 // Return values
 enum DAC_RETURN_VAL

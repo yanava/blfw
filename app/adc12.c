@@ -3,36 +3,41 @@
 // EB - 07/2014 - Initial Version
 
 #include "adc12.h"
-
-// ADC IIR Filter Coefficients
-// I made a very cool Excel to show these are good values
-#define ADC_IIR_C0  (0.8f)             
-#define ADC_IIR_C1  (1.00f-ADC_IIR_C0)
-
-// Number of used ADC Channels
-#define ADC12_NUM_OF_CHANNELS   (6)  
-#define ADC12_MAX_VALUE         (4095)
-#define ADC12_VREF_PLUS         (3300)
+#include "systick.h"
 
 // ADC1 address as stated in RM0033 PG51 and 249
 #define ADC_CDR_ADDRESS         ((uint32_t)0x4001204C) 
 
-/* Buffer length definitions */
-#define MEASURE_BUF_SIZE 512
-
-/* Time interval for reporting all measures */
-#define MEASURE_REPORT_TIME_MS  1000
-
 // ADC DMA Buffer, which contain "Live" samples
-static volatile uint16_t adc_dma_buffer[ADC12_NUM_OF_CHANNELS];
+static volatile uint16_t adc12_dma_buffer[ADC12_NUM_OF_CHANNELS];
 
 // ADC Output Buffer, that has IIR Filtered samples
-static uint16_t adc_output_buffer[ADC12_NUM_OF_CHANNELS];
+static uint16_t adc12_output_buffer[ADC12_NUM_OF_CHANNELS];
+
+static uint16_t adc12_vref; 
+
+// Set Vref
+void ADC12_SetVref(uint16_t val)
+{
+    adc12_vref = val;
+}
+
+// Get Vref
+uint16_t ADC12_GetVref(void)
+{
+    return adc12_vref;
+}
+
+// Calibrate Vref to a better value using internal voltage reference
+void ADC12_CalibrateVref(void)
+{    
+    ADC12_SetVref((uint16_t) (ADC12_INTREF_VOLTAGE * ADC12_MAX_VALUE / adc12_output_buffer[ADC12_CH5]));
+}
 
 // Get ADC Output Buffer
 uint16_t ADC12_GetOutputBufferSample(enum ADC12_CHANNELS const ch)
 {
-    return ((uint16_t) (adc_output_buffer[ch]*ADC12_VREF_PLUS/ADC12_MAX_VALUE));
+    return ((uint16_t) (adc12_output_buffer[ch]*ADC12_GetVref()/ADC12_MAX_VALUE));
 }
 
 // Init structure
@@ -45,6 +50,8 @@ void ADC12_Init(void)
     GPIO_InitTypeDef      GPIO_InitStructure;
     NVIC_InitTypeDef      NVIC_InitStructure;
   
+    ADC12_SetVref(ADC12_TYPICAL_VREF);
+    
     // Enables clock to DMA2 and GPIOC through AHB1
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOC, ENABLE);
     
@@ -63,7 +70,7 @@ void ADC12_Init(void)
     // Initialize the DMA to get the samples from the ADC
     DMA_InitStructure.DMA_Channel = DMA_Channel_0;  
     DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) ADC_CDR_ADDRESS;
-    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &adc_dma_buffer;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &adc12_dma_buffer;
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
     DMA_InitStructure.DMA_BufferSize = ADC12_NUM_OF_CHANNELS;
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
@@ -139,12 +146,19 @@ void ADC12_Init(void)
     // Enables DMA for ADC1
     ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);   
     ADC_DMACmd(ADC1, ENABLE);
-  
+
+    
     // Enables ADC1
     ADC_Cmd(ADC1, ENABLE);
     ADC_SoftwareStartConv(ADC1);
+    
+    SYSTICK_delay_ms(1);
+    
+    // Calibrate Vref
+    ADC12_CalibrateVref();
 
 }
+
 
 // Calculates a simple IIR filtered sample 
 uint16_t ADC12_IIRFilterSamples(uint16_t yn_1, uint16_t xn)
@@ -159,8 +173,8 @@ void ADC12_FilterDMASamples(void)
 {
     for (int i=0 ; i < ADC12_NUM_OF_CHANNELS; i++)
     {        
-        adc_output_buffer[i] = ADC12_IIRFilterSamples(adc_output_buffer[i], 
-                                                      adc_dma_buffer[i]);
+        adc12_output_buffer[i] = ADC12_IIRFilterSamples(adc12_output_buffer[i], 
+                                                        adc12_dma_buffer[i]);
     }   
 }
 

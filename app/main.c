@@ -13,9 +13,9 @@
 void main(void)
 {   
     SYSTICK_Init();    // System timer tick initialization
-    
-    DAC_HwInit  ();    // DAC Init
     ADC12_Init  ();    // ADC Init
+    DAC_HwInit  ();    // DAC Init
+
     USART2_Init ();    // USART2 Init - Wifi
     IV_Init     ();    // IV Curve Tracer Initialization
     

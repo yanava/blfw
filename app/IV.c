@@ -15,7 +15,7 @@
 #define IV_VOLTAGE_SC_TOL           (500)
 #define IV_DEFAULT_POINT_DELAY      (5)
 #define IV_EVENT_LIST_SIZE          (10)
-#define IV_CURVE_SIZE               (DAC_VREF_PLUS / IV_CURRENT_DAC_STEP)
+#define IV_CURVE_SIZE               (ADC12_TYPICAL_VREF / IV_CURRENT_DAC_STEP)
 
 
 // Event type, parameters can be added after super
@@ -79,7 +79,7 @@ FSM_State IV_HAND_INITIAL(IV_TRACER_T *me, FSM_Event *e)
 {
     // Inits Curve FIFO
     FIFO_Init(&me->curve.super, &me->curve.points, IV_CURVE_SIZE, sizeof(IV_POINT_T));
-    
+        
     // Goes to IDLE mode
     return FSM_TRAN(me,IV_HAND_IDLE);
 }
@@ -89,7 +89,7 @@ FSM_State IV_HAND_IDLE(IV_TRACER_T *me, FSM_Event *e)
 {
     switch (e->signal)
     {
-        case FSM_ENTRY_SIGNAL:                
+        case FSM_ENTRY_SIGNAL:
             return FSM_HANDLED();
         case IV_START_NEW_CURVE:
             return FSM_TRAN(me,IV_HAND_OPER);
