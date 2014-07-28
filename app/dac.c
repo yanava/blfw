@@ -2,8 +2,6 @@
 #include "dac.h"
 #include "adc12.h"
 
-
-
 void DAC_HwInit()
 {
     
@@ -36,7 +34,8 @@ void DAC_HwInit()
     DAC_Cmd(DAC_Channel_1, ENABLE);
     DAC_Cmd(DAC_Channel_2, ENABLE);
     
-    DAC_SetDAC1ValInMilivolts(10);
+    // Init both in zero
+    DAC_SetBothDacsInMilivolts(0,0);
     
 }
 
@@ -55,7 +54,7 @@ int DAC_SetDAC1ValInMilivolts(uint16_t val)
     if (val > ADC12_GetVref()) return DAC_VALUE_OUTSIDE_BOUNDARIES;
     
     // Set the voltage using the formula on Page 152 of UM1061
-    DAC_SetChannel1Data(DAC_Align_12b_R, val * DAC_MAX_VALUE / 3300);
+    DAC_SetChannel1Data(DAC_Align_12b_R, DAC_MilivoltsToDacVal(val));
            
     // If everything went right, no error is returned
     return DAC_NOERROR;

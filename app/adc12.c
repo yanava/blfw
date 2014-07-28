@@ -14,7 +14,7 @@ static volatile uint16_t adc12_dma_buffer[ADC12_NUM_OF_CHANNELS];
 // ADC Output Buffer, that has IIR Filtered samples
 static uint16_t adc12_output_buffer[ADC12_NUM_OF_CHANNELS];
 
-static uint16_t adc12_vref; 
+static uint16_t adc12_vref = ADC12_TYPICAL_VREF; 
 
 // Set Vref
 void ADC12_SetVref(uint16_t val)
@@ -49,8 +49,6 @@ void ADC12_Init(void)
     DMA_InitTypeDef       DMA_InitStructure;
     GPIO_InitTypeDef      GPIO_InitStructure;
     NVIC_InitTypeDef      NVIC_InitStructure;
-  
-    ADC12_SetVref(ADC12_TYPICAL_VREF);
     
     // Enables clock to DMA2 and GPIOC through AHB1
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOC, ENABLE);
