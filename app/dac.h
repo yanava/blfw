@@ -1,3 +1,7 @@
+// DAC.H
+// Header file for DAC routines
+// EB - 07/2014 - Initial Version
+
 #ifndef __DAC_H
 #define __DAC_H
 

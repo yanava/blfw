@@ -2006,6 +2006,12 @@
       <name>$PROJ_DIR$\apitypes.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\wf121.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\wf121.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\wifi_bglib.h</name>
     </file>
   </group>

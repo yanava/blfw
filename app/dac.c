@@ -1,3 +1,6 @@
+// DAC.C
+// Source file for DAC routines
+// EB - 07/2014 - Initial Version
 
 #include "dac.h"
 #include "adc12.h"

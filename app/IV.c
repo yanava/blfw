@@ -9,7 +9,7 @@
 #include "adc12.h"
 
 #define IV_CURRENT_RESISTOR         (0.1f)
-#define IV_CURRENT_CURVE_STEP       (100)
+#define IV_CURRENT_CURVE_STEP       (50)
 #define IV_CURRENT_DAC_STEP         ((uint16_t) (IV_CURRENT_RESISTOR*IV_CURRENT_CURVE_STEP))
 #define IV_VOLTAGE_DIVIDER_FACTOR   (33.4f)
 #define IV_VOLTAGE_SC_TOL           (500)
@@ -154,11 +154,11 @@ uint16_t IV_Get_Panel_Voltage(void)
     uint16_t voltage = (uint16_t) (ADC12_GetOutputBufferSample(ADC12_CH1)*IV_VOLTAGE_DIVIDER_FACTOR);
     
     // If panel voltage drops too much, issues short circuit
-    if (voltage <= IV_VOLTAGE_SC_TOL)
+    /*if (voltage <= IV_VOLTAGE_SC_TOL)
     {
         iv_e.super.signal = IV_SHORT_CIRCUIT;
         IV_Post_Event(&iv_tracer, &iv_e);
-    }
+    }*/
     
     return (voltage); 
 }

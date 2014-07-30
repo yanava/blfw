@@ -5,7 +5,6 @@
 #include "dac.h"
 #include "adc12.h"
 #include "IV.h"
-#include "wifi_bglib.h"
 
 #include <stdio.h>
 
@@ -23,7 +22,7 @@ void main(void)
     // Main loop will execute forever
     while(1)
     {
-        IV_Process();    
+        IV_Process();   // IV curve process
     }
     
 }
