@@ -34,7 +34,7 @@ void ADC12_CalibrateVref(void)
     ADC12_SetVref((uint16_t) (ADC12_INTREF_VOLTAGE * ADC12_MAX_VALUE / adc12_output_buffer[ADC12_CH5]));
 }
 
-// Get ADC Output Buffer
+// Get ADC Output Buffer in milivolts
 uint16_t ADC12_GetOutputBufferSample(enum ADC12_CHANNELS const ch)
 {
     return ((uint16_t) (adc12_output_buffer[ch]*ADC12_GetVref()/ADC12_MAX_VALUE));

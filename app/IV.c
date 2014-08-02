@@ -8,10 +8,8 @@
 #include "IV.h"
 #include "adc12.h"
 
-#define IV_CURRENT_RESISTOR         (0.1f)
 #define IV_CURRENT_CURVE_STEP       (50)
 #define IV_CURRENT_DAC_STEP         ((uint16_t) (IV_CURRENT_RESISTOR*IV_CURRENT_CURVE_STEP))
-#define IV_VOLTAGE_DIVIDER_FACTOR   (33.4f)
 #define IV_VOLTAGE_SC_TOL           (500)
 #define IV_DEFAULT_POINT_DELAY      (5)
 #define IV_EVENT_LIST_SIZE          (10)
