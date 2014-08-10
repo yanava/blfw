@@ -4,7 +4,8 @@
 #include "usart.h"
 #include "dac.h"
 #include "adc12.h"
-#include "IV.h"
+#include "dynload.h"
+//#include "IV.h"
 
 #include <stdio.h>
 
@@ -15,14 +16,19 @@ void main(void)
     DAC_HwInit  ();    // DAC Init, for some weird reason should be before ADC
     ADC12_Init  ();    // ADC Init    
     USART2_Init ();    // USART2 Init - Wifi
-    IV_Init     ();    // IV Curve Tracer Initialization
+    DL_Init     ();
+    //IV_Init     ();    // IV Curve Tracer Initialization
     
-    IV_Perform_Curve();
+    //IV_Perform_Curve();
+    
+    DL_SetCurrent(550);
     
     // Main loop will execute forever
     while(1)
     {
-        IV_Process();   // IV curve process
+        //IV_Process();   // IV curve process
+        DL_Process();
+        SYSTICK_delay_ms(1);
     }
     
 }

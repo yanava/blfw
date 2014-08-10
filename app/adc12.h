@@ -23,9 +23,9 @@ enum ADC12_CHANNELS
     ADC12_CH1 = 0,      // PC0 -> ADC123_IN10 - VSENSE
     ADC12_CH2,          // PC2 -> ADC123_IN12 - ISENSE for LB1
     ADC12_CH3,          // PC3 -> ADC123_IN13 - ISENSE for LB2
-    ADC12_CH4,
-    ADC12_CH5,
-    ADC12_CH6
+    ADC12_CH4,          // VBAT        
+    ADC12_CH5,          // VREF
+    ADC12_CH6           // VTEMP
 };
 
 void ADC12_Init(void);

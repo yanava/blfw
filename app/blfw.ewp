@@ -1979,12 +1979,6 @@
       <name>$PROJ_DIR$\dynload.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\IV.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\IV.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\pid.c</name>
     </file>
     <file>

@@ -157,8 +157,8 @@ void ADC12_Init(void)
 
 }
 
-
-// Calculates a simple IIR filtered sample 
+// Calculates a simple IIR filtered sample
+// Not used when PID is enabled
 uint16_t ADC12_IIRFilterSamples(uint16_t yn_1, uint16_t xn)
 {
     uint16_t result = (uint16_t) ((ADC_IIR_C0*yn_1 + ADC_IIR_C1*xn));
@@ -171,8 +171,7 @@ void ADC12_FilterDMASamples(void)
 {
     for (int i=0 ; i < ADC12_NUM_OF_CHANNELS; i++)
     {        
-        adc12_output_buffer[i] = ADC12_IIRFilterSamples(adc12_output_buffer[i], 
-                                                        adc12_dma_buffer[i]);
+        adc12_output_buffer[i] = adc12_dma_buffer[i];
     }   
 }
 

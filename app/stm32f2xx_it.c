@@ -33,7 +33,7 @@
 #include "fifo.h"
 #include "usart.h"
 #include "adc12.h"
-#include "IV.h"
+//#include "IV.h"
 
 /** @addtogroup Template_Project
   * @{
@@ -146,7 +146,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   SYSTICK_tick();
-  IV_Timertick ();
+  //IV_Timertick ();
 }
 
 /******************************************************************************/
