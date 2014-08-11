@@ -21,14 +21,13 @@ void main(void)
     
     //IV_Perform_Curve();
     
-    DL_SetCurrent(550);
+    DL_SetCurrent(500);
     
     // Main loop will execute forever
     while(1)
     {
         //IV_Process();   // IV curve process
         DL_Process();
-        SYSTICK_delay_ms(1);
     }
     
 }

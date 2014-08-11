@@ -21,7 +21,6 @@ void PID_SetRefValue(PID_T *me, int32_t ref_value)
 }
 
 // Process PID output
-// Todo: anti-windup for the integral term (needs experimentation first)
 int32_t PID_Process(PID_T *me, int32_t measured_value)
 {
     int32_t error, derivative, integral, control_sig;

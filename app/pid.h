@@ -6,7 +6,7 @@
 #ifndef __PID_H_
 #define __PID_H_
 
-#define PID_ERROR_TOL       (1)
+#define PID_ERROR_TOL       (2)
 #define PID_MAX_INTEGRAL    (65536)
 
 // PID Tyoe
