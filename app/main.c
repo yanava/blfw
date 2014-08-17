@@ -1,4 +1,3 @@
-
 #include "stm32f2xx.h"
 #include "systick.h"
 #include "usart.h"

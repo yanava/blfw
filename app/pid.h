@@ -7,15 +7,15 @@
 #define __PID_H_
 
 #define PID_ERROR_TOL       (3)
-#define PID_MAX_INTEGRAL    (4095)
+#define PID_MAX_INTEGRAL    (2047)
 
 // Locking values
 enum PID_LOCK_COUNT
 {
     PID_NOT_LOCKED      = 0,
-    PID_UNLOCK          = 2,
-    PID_LOCK            = 4,
-    PID_FULLY_LOCKED    = 5
+    PID_UNLOCK          = 3,
+    PID_LOCK            = 5,
+    PID_FULLY_LOCKED    = 8
 };
 
 // PID Tyoe
