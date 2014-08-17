@@ -21,7 +21,7 @@ void main(void)
     
     //IV_Perform_Curve();
     
-    DL_SetCurrent(500);
+    DL_SetCurrent(600);
     
     // Main loop will execute forever
     while(1)

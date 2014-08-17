@@ -25,19 +25,32 @@ void DL_SetCurrent(uint16_t set_current_in_ma)
     PID_SetRefValue(&pid, (int16_t) target_voltage); 
 }
 
+uint16_t probe_voltage;
+int16_t  probe_correction;
+uint16_t probe_last_dac_val;
+uint16_t probe_dac_val;
+int probe_locked; 
+
 void DL_Process()
 {
     if(pid_timer == 0)
     {
-        uint16_t measured_voltage = ADC12_GetOutputBufferSample(DL_ADC_ISENSE_LB1);
+        uint16_t measured_voltage = probe_voltage = ADC12_GetOutputBufferSample(DL_ADC_ISENSE_LB1);
     
-        int16_t correction = PID_Process(&pid,measured_voltage);
+        int16_t correction = probe_correction = PID_Process(&pid,measured_voltage);
     
-        uint16_t dac_val = DAC_DacValToMilivolts(DAC_GetDataOutputValue(DAC_Channel_1));
+        uint16_t dac_val = probe_last_dac_val = DAC_DacValToMilivolts(DAC_GetDataOutputValue(DAC_Channel_1));
        
-        dac_val += correction;  
-    
+        if (dac_val + correction < 0) 
+            dac_val = 0;
+        
+        else dac_val += correction;         
+        
+        probe_dac_val = dac_val;
+        
         DAC_SetDACValInMilivolts(DAC_Channel_1,dac_val);
+        
+        probe_locked = PID_LockStatus(&pid);
         
         pid_timer = DL_PID_TIMER;
     }
