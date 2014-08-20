@@ -18,7 +18,7 @@ enum PID_LOCK_COUNT
     PID_FULLY_LOCKED    = 8
 };
 
-// PID Tyoe
+// PID Type
 typedef struct PID_TAG
 {    
     float Kp;           // Proportional coefficient

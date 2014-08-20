@@ -4,16 +4,14 @@
 
 #include "fsm.h"
 #include "fifo.h"
-#include "dac.h"
 #include "IV.h"
-#include "adc12.h"
+#include "dynload.h"
 
 #define IV_CURRENT_CURVE_STEP       (50)
-#define IV_CURRENT_DAC_STEP         ((uint16_t) (IV_CURRENT_RESISTOR*IV_CURRENT_CURVE_STEP))
 #define IV_VOLTAGE_SC_TOL           (500)
-#define IV_DEFAULT_POINT_DELAY      (5)
+#define IV_DEFAULT_POINT_DELAY      (10)
 #define IV_EVENT_LIST_SIZE          (10)
-#define IV_CURVE_SIZE               (ADC12_TYPICAL_VREF / IV_CURRENT_DAC_STEP)
+#define IV_CURVE_SIZE               (512)
 
 
 // Event type, parameters can be added after super
@@ -59,7 +57,7 @@ enum IV_SIGNALS
     IV_START_NEW_CURVE = FSM_USER_SIGNAL,
     IV_POINT_DELAY_TIMEOUT, 
     IV_SHORT_CIRCUIT,
-    IV_DAC_FULL_SCALE
+    IV_FULL_SCALE
 };
 
 static IV_TRACER_T iv_tracer;
@@ -116,18 +114,18 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
             FIFO_Post(&me->curve.super, &me->last_point);
             // Increments current by a step
             me->last_point.i += IV_CURRENT_CURVE_STEP;
-            IV_SetCurrent(me->last_point.i);
+            DL_SetCurrent(me->last_point.i);
             // Sets the point delay
             me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
         case IV_SHORT_CIRCUIT:
-        case IV_DAC_FULL_SCALE:
+        case IV_FULL_SCALE:
             // Curve done
             return FSM_TRAN(me,IV_HAND_IDLE);
         case FSM_EXIT_SIGNAL:
             // Set DAC to zero here, to reduce temperature
             me->last_point.i = 0;
-            IV_SetCurrent(me->last_point.i);
+            DL_SetCurrent(me->last_point.i);
             return FSM_HANDLED();   
     }
     // Default: Handled
@@ -149,37 +147,16 @@ uint16_t IV_Get_Panel_Voltage(void)
 {
     IV_EVENT_T iv_e;
     
-    uint16_t voltage = (uint16_t) (ADC12_GetOutputBufferSample(ADC12_CH1)*IV_VOLTAGE_DIVIDER_FACTOR);
+    uint16_t voltage = DL_GetVoltage();
     
-    // If panel voltage drops too much, issues short circuit
-    /*if (voltage <= IV_VOLTAGE_SC_TOL)
+    //If panel voltage drops too much, issues short circuit
+    if (voltage <= IV_VOLTAGE_SC_TOL)
     {
         iv_e.super.signal = IV_SHORT_CIRCUIT;
         IV_Post_Event(&iv_tracer, &iv_e);
-    }*/
+    }
     
     return (voltage); 
-}
-
-// Gets the panel voltage
-uint16_t IV_Get_Panel_Current(void)
-{    
-    return ((uint16_t) (ADC12_GetOutputBufferSample(ADC12_CH2)/IV_CURRENT_RESISTOR)); 
-}
-
-// Set the current to draw from panel
-void IV_SetCurrent(uint16_t current_in_ma)
-{
-    IV_EVENT_T iv_e;
-    
-    uint16_t dac_val = ((uint16_t) (current_in_ma * IV_CURRENT_RESISTOR));
-    
-    if (DAC_SetDAC1ValInMilivolts(dac_val) == DAC_VALUE_OUTSIDE_BOUNDARIES)
-    {
-        iv_e.super.signal = IV_DAC_FULL_SCALE;
-        IV_Post_Event(&iv_tracer, &iv_e);
-    }
-        
 }
 
 // Post an event to the IV Event list

@@ -48,10 +48,12 @@ uint16_t DAC_MilivoltsToDacVal(uint16_t val)
     return ((uint16_t)(val * DAC_MAX_VALUE / ADC12_GetVref()));
 }
 
+// Convert DAC Value to Milivolts
 uint16_t DAC_DacValToMilivolts(uint16_t val)
 {
     return ((uint16_t)(val * ADC12_GetVref() / DAC_MAX_VALUE ));
 }
+
 // Set DAC1 Value in Milivolts
 int DAC_SetDACValInMilivolts(uint32_t DAC_Channel, uint16_t val)
 {
