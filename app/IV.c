@@ -57,7 +57,7 @@ enum IV_SIGNALS
     IV_START_NEW_CURVE = FSM_USER_SIGNAL,
     IV_POINT_DELAY_TIMEOUT, 
     IV_SHORT_CIRCUIT,
-    IV_FULL_SCALE
+    IV_UNSTABLE_TARGET
 };
 
 static IV_TRACER_T iv_tracer;
@@ -119,7 +119,7 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
             me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
         case IV_SHORT_CIRCUIT:
-        case IV_FULL_SCALE:
+        case IV_UNSTABLE_TARGET:
             // Curve done
             return FSM_TRAN(me,IV_HAND_IDLE);
         case FSM_EXIT_SIGNAL:
@@ -131,7 +131,6 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
     // Default: Handled
     return FSM_HANDLED();
 }
-
 
 // Starts a new IV Curve
 void IV_Perform_Curve(void)

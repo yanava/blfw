@@ -54,7 +54,7 @@ uint16_t DL_GetVoltage(void)
 void DL_ConstantCurrentControl(void)
 {
     // Gets the voltage on the current setting resistor
-    uint16_t measured_voltage = DL_GetCurrent();
+    uint16_t measured_voltage = ADC12_GetOutputBufferSample(DL_ADC_ISENSE_LB1);
 
     // Calculates the amount of correction using the PID
     int16_t correction = PID_Process(&dynload.pid,measured_voltage);
@@ -72,22 +72,28 @@ void DL_ConstantCurrentControl(void)
         dynload.full_scale = 0;   
         
     // Resets the timer
-    dynload.pid_timer = DL_PID_TIMER;
+    //dynload.pid_timer = DL_PID_TIMER;
 }
 
 // DL Process
 void DL_Process()
 {
-    if(dynload.pid_timer == 0)
-    {
+    //if(dynload.pid_timer == 0)
+    //{
         dynload.control_function();
-    }
+   // }
+}
+
+// Knows if FULL SCALE status have been reached
+int DL_GetFullScaleStatus(void)
+{
+    return (dynload.full_scale);
 }
 
 // Gets the DL Status
-int DL_LockedStatus(void)
+int DL_GetLockedStatus(void)
 {
-    return (PID_LockStatus(&dynload.pid));
+    return (dynload.pid.locked);
 }
 
 // DL Timertick

@@ -60,6 +60,9 @@ int32_t PID_Process(PID_T *me, int32_t measured_value)
     // If error is not zero, decrements lock_count until PID_NOT_LOCKED
     else if (error != 0 && me->lock_count > PID_NOT_LOCKED) me->lock_count--;
     
+    // Updates Lock Status
+    PID_LockStatus(me);
+    
     // Calculates the integral error
     integral = me->integral + error;
     
