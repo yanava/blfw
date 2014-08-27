@@ -8,11 +8,11 @@
 #include "dynload.h"
 
 #define IV_CURRENT_CURVE_STEP       (50)
+#define IV_MINIMUM_CURRENT          (250)
 #define IV_VOLTAGE_SC_TOL           (500)
 #define IV_DEFAULT_POINT_DELAY      (10)
 #define IV_EVENT_LIST_SIZE          (10)
 #define IV_CURVE_SIZE               (512)
-
 
 // Event type, parameters can be added after super
 typedef struct IV_EVENT_TAG
@@ -104,6 +104,8 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
     {
         case FSM_ENTRY_SIGNAL:
             // Sets the point delay for first time
+            me->last_point.i = IV_MINIMUM_CURRENT;
+            DL_SetCurrent(me->last_point.i);
             me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
         case IV_POINT_DELAY_TIMEOUT:
@@ -119,12 +121,11 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
             me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
         case IV_SHORT_CIRCUIT:
-        case IV_UNSTABLE_TARGET:
             // Curve done
             return FSM_TRAN(me,IV_HAND_IDLE);
         case FSM_EXIT_SIGNAL:
             // Set DAC to zero here, to reduce temperature
-            me->last_point.i = 0;
+            me->last_point.i = IV_MINIMUM_CURRENT;
             DL_SetCurrent(me->last_point.i);
             return FSM_HANDLED();   
     }
@@ -139,6 +140,13 @@ void IV_Perform_Curve(void)
     
     iv_e.super.signal = IV_START_NEW_CURVE;
     IV_Post_Event(&iv_tracer, &iv_e);  
+}
+
+uint16_t IV_Get_Panel_Current(void)
+{   
+    uint16_t current = DL_GetCurrent();
+    
+    return (current);
 }
 
 // Gets the panel voltage

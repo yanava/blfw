@@ -7,11 +7,6 @@
 
 #include "stm32f2xx.h"
 
-// ADC IIR Filter Coefficients
-// I made a very cool Excel to show these are good values
-#define ADC_IIR_C0  (0.9f)             
-#define ADC_IIR_C1  (1.00f-ADC_IIR_C0)
-
 // Number of used ADC Channels
 #define ADC12_NUM_OF_CHANNELS     (6)  
 #define ADC12_MAX_VALUE           (4095)

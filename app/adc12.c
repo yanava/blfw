@@ -5,6 +5,11 @@
 #include "adc12.h"
 #include "systick.h"
 
+// ADC IIR Filter Coefficients
+// I made a very cool Excel to show these are good values
+#define ADC_IIR_C0  (0.8f)             
+#define ADC_IIR_C1  (1.00f-ADC_IIR_C0)
+
 // ADC1 address as stated in RM0033 PG51 and 249
 #define ADC_CDR_ADDRESS         ((uint32_t)0x4001204C) 
 
@@ -152,7 +157,7 @@ void ADC12_Init(void)
     ADC_VBATCmd(ENABLE); 
   
     // Enables DMA for ADC1
-    ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);   
+    ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);       
     ADC_DMACmd(ADC1, ENABLE);
 
     
@@ -181,7 +186,7 @@ void ADC12_FilterDMASamples(void)
 {
     for (int i=0 ; i < ADC12_NUM_OF_CHANNELS; i++)
     {        
-        adc12_output_buffer[i] = adc12_dma_buffer[i];
+        adc12_output_buffer[i] = ADC12_IIRFilterSamples(adc12_output_buffer[i],adc12_dma_buffer[i]);
     }   
 }
 
