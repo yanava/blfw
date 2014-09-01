@@ -145,12 +145,12 @@ void ADC12_Init(void)
     // Configs each ADC1 Channel individually
     // ADC1 CH 10, 12 and 13 are hooked up to actual inputs
     // The rest is tied to VBAT, VREF and VTEMP
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_3Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_3Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_13, 3, ADC_SampleTime_3Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_Vbat, 4, ADC_SampleTime_3Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_Vrefint, 5, ADC_SampleTime_3Cycles);
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_TempSensor, 6, ADC_SampleTime_3Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_15Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_15Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_13, 3, ADC_SampleTime_15Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_Vbat, 4, ADC_SampleTime_15Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_Vrefint, 5, ADC_SampleTime_15Cycles);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_TempSensor, 6, ADC_SampleTime_15Cycles);
   
     // Enables Temp Sensor and VBAT Measurement
     ADC_TempSensorVrefintCmd(ENABLE);
