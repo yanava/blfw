@@ -33,12 +33,12 @@
 #include "usbd_cdc_vcp.h"
 #include "usb_conf.h"
 
-#include "string.h"
-#include "stdio.h"
+#include <string.h>
+#include <stdio.h>
+
 
 //app includes
-#include "usbp.h"
-
+#include "usart.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -100,8 +100,7 @@ static uint16_t VCP_Init(void)
 * @retval Result of the opeartion (USBD_OK in all cases)
 */
 static uint16_t VCP_DeInit(void)
-{
-  
+{  
   return USBD_OK;
 }
 
@@ -187,10 +186,12 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
   {
     if (linecoding.datatype == 7)
     {
+      USART2_Receive_Byte(&Buf[i]);
       APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i] & 0x7F;
     }
     else if (linecoding.datatype == 8)
     {
+      USART2_Receive_Byte(&Buf[i]);
       APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i];
     }
     APP_Rx_ptr_in++;    
@@ -200,8 +201,31 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
     {
       APP_Rx_ptr_in = 0;
     }  
-  }  
-  
+   } 
+    
+    
+  /* Original Code
+  uint32_t i;
+  for(i = 0; i < Len ; i++)
+  {
+    if (linecoding.datatype == 7)
+    {
+      APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i] & 0x7F;
+    }
+    else if (linecoding.datatype == 8)
+    {
+      APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i];
+    }
+    APP_Rx_ptr_in++;    
+   */
+    
+    /* To avoid buffer overflow */
+    /*if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
+    {
+      APP_Rx_ptr_in = 0;
+    }  
+  }  */
+
   
   return USBD_OK;
 }
@@ -225,6 +249,9 @@ static uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
 { 
 
   //VCP_DataTx(Buf,Len); 
+  
+  USART2_Send_Packet(Len, Buf);   
+    
   return USBD_OK;
 }
 

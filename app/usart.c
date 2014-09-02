@@ -120,7 +120,7 @@ void USART2_Send_Packet(uint32_t length, uint8_t *data)
 void USART2_Receive_Byte(uint8_t *data)
 {
     // Gets a byte from the FIFO
-    FIFO_Get(&usart2_tx_fifo.super,data); 
+    FIFO_Get(&usart2_rx_fifo.super,data); 
 }
 
 // Gets one byte received via UART from the buffer

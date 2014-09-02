@@ -266,7 +266,7 @@ void USART2_IRQHandler(void)
         uint8_t data = (uint8_t) USART_ReceiveData(USART2);
         
         // Posts it to the RX FIFO
-        FIFO_Post(USART2_GetRXFifoT(), (void*) data);
+        FIFO_Post(USART2_GetRXFifoT(), (void*) &data);
         
     }
     

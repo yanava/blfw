@@ -11,7 +11,7 @@
 #define USART_WORDLENGTH    (USART_WordLength_8b)
 #define USART_STOPBITS      (USART_StopBits_1)
 #define USART_PARITY        (USART_Parity_No)
-#define USART_FLOWCTRL      (USART_HardwareFlowControl_None)
+#define USART_FLOWCTRL      (USART_HardwareFlowControl_RTS_CTS)//(USART_HardwareFlowControl_None)
 #define USART_MODE          (USART_Mode_Rx | USART_Mode_Tx)
 
 #define USART_FIFO_SIZE     (128)
