@@ -46,7 +46,7 @@
 LINE_CODING linecoding =
 {
   115200, /* baud rate*/
-  0x00,   /* stop bits-1*/
+  0x01,   /* stop bits-1*/
   0x00,   /* parity - none*/
   0x08    /* nb. of bits 8*/
 };
@@ -186,12 +186,10 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
   {
     if (linecoding.datatype == 7)
     {
-      USART2_Receive_Byte(&Buf[i]);
       APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i] & 0x7F;
     }
     else if (linecoding.datatype == 8)
     {
-      USART2_Receive_Byte(&Buf[i]);
       APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i];
     }
     APP_Rx_ptr_in++;    

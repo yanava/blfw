@@ -42,7 +42,7 @@ void USART2_Init(void)
         
     // Enable AHB clock to GPIOD
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-    
+   
     // Connect PB pins to USART2 by setting to Alternate Function*/
     GPIO_PinAFConfig(GPIOD, GPIO_PinSource3, GPIO_AF_USART2);
     GPIO_PinAFConfig(GPIOD, GPIO_PinSource4, GPIO_AF_USART2);
@@ -50,8 +50,7 @@ void USART2_Init(void)
     GPIO_PinAFConfig(GPIOD, GPIO_PinSource6, GPIO_AF_USART2);
     
     // Configure USART2 GPIO pins as Alternate Function */
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | 
-                                  GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
@@ -81,6 +80,9 @@ void USART2_Init(void)
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
         
+    // Do some shit
+    // USART_HalfDuplexCmd(USART2,ENABLE);
+    
     // Configure USART2 Interrupt for data reception triggering
     USART_ITConfig (USART2, USART_IT_RXNE , ENABLE);
        

@@ -47,7 +47,7 @@ void main(void)
     while(1)
     {
         IV_Process();   // IV curve process
-        DL_Process();   // Dynamic Load process         
+        DL_Process();   // Dynamic Load process 
     }
 }
 
