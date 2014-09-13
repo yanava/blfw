@@ -29,6 +29,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f2xx_it.h"
+#include "stm322xg_eval_sdio_sd.h"
 #include "systick.h"
 #include "fifo.h"
 #include "usart.h"
@@ -36,10 +37,12 @@
 #include "dynload.h"
 #include "IV.h"
 
+// USB
 #include "usb_core.h"
 #include "usbd_core.h"
 #include "usbd_cdc_core.h"
 #include "usbd_cdc_vcp.h"
+
 
 /** @addtogroup Template_Project
   * @{
@@ -162,7 +165,6 @@ void SysTick_Handler(void)
   SYSTICK_tick();
   IV_Timertick ();
 }
-
 /* USB */
 
 /**
@@ -296,5 +298,19 @@ void DMA2_Stream0_IRQHandler(void)
         DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
     }
 }
+
+/* SDIO */
+void SDIO_IRQHandler(void)
+{
+  /* Process All SDIO Interrupt Sources */
+  SD_ProcessIRQSrc();
+}
+
+void SD_SDIO_DMA_IRQHANDLER(void)
+{
+  /* Process DMA2 Stream3 or DMA2 Stream6 Interrupt Sources */
+  SD_ProcessDMAIRQ();
+}
+
   
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

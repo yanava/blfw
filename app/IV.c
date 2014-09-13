@@ -6,6 +6,7 @@
 #include "fifo.h"
 #include "IV.h"
 #include "dynload.h"
+#include <stdio.h>
 
 #define IV_CURRENT_CURVE_STEP       (50)
 #define IV_MINIMUM_CURRENT          (250)
@@ -13,12 +14,30 @@
 #define IV_DEFAULT_POINT_DELAY      (10)
 #define IV_EVENT_LIST_SIZE          (10)
 #define IV_CURVE_SIZE               (512)
+#define IV_MAX_FATFS_ATTEMPT        (10)
+
+/************* FATFS STACK INCLUDE ********************************/
+#include "stm322xg_eval_sdio_sd.h"
+#include "ff.h"
+#include "diskio.h"
+#include "string.h"
+/******************************************************************/
+
 
 // Event type, parameters can be added after super
 typedef struct IV_EVENT_TAG
 {
     FSM_Event super;
 } IV_EVENT_T;
+
+typedef struct IV_FATFS_TAG
+{
+  FRESULT res;
+  FILINFO fno;
+  FIL fil;
+  DIR dir;
+  FATFS fs32;  
+} IV_FATFS_T;
 
 // Event FIFO type
 typedef struct IV_EVENT_LIST_TAG
@@ -48,6 +67,7 @@ typedef struct IV_TRACER_TAG
     IV_EVENT_LIST_T events;
     IV_CURVE_T curve;
     IV_POINT_T last_point;
+    IV_FATFS_T filesystem;
     uint32_t point_delay_ms;
     uint32_t point_delay_counter;
 } IV_TRACER_T;
@@ -73,9 +93,6 @@ void IV_SetCurrent(uint16_t current_in_ma);
 // Initial state. Just performs the initial transition
 FSM_State IV_HAND_INITIAL(IV_TRACER_T *me, FSM_Event *e)
 {
-    // Inits Curve FIFO
-    FIFO_Init(&me->curve.super, &me->curve.points, IV_CURVE_SIZE, sizeof(IV_POINT_T));
-        
     // Goes to IDLE mode
     return FSM_TRAN(me,IV_HAND_IDLE);
 }
@@ -90,6 +107,8 @@ FSM_State IV_HAND_IDLE(IV_TRACER_T *me, FSM_Event *e)
         case IV_START_NEW_CURVE:
             return FSM_TRAN(me,IV_HAND_OPER);
         case FSM_EXIT_SIGNAL:
+            // Inits Curve FIFO
+            FIFO_Init(&me->curve.super, &me->curve.points, IV_CURVE_SIZE, sizeof(IV_POINT_T));
             return FSM_HANDLED();   
     }
     
@@ -218,4 +237,69 @@ void IV_Timertick (void)
             IV_Post_Event(&iv_tracer, &iv_e);
         }
     }
+}
+
+//TODO: typedef enum for return values
+// fatfs_handle is the object responsible for fat32 interface
+int IV_ExportCurve(char * filename, IV_CURVE_T *curve, IV_FATFS_T *fatfs_handle)
+{
+  uint32_t i;
+  char header[64];
+  char data_string[128];
+  UINT BytesWritten;
+  unsigned int n_attempt;
+  
+  //check if the caller is a orc
+  if(filename == 0)
+  {
+    return 0;
+  }
+  
+  //check if the requested curve has enough points
+  if(curve->super.elements == 0)
+  {
+    return 0;
+  }
+  
+  SD_InterruptEnable();
+  
+  memset(&fatfs_handle->fs32, 0, sizeof(FATFS));
+  
+  fatfs_handle->res = f_mount(0, &fatfs_handle->fs32);
+  
+  if(fatfs_handle->res != FR_OK)
+  {
+    return -1;
+  }
+  
+  fatfs_handle->res = f_close(&fatfs_handle->fil);
+  
+  n_attempt = IV_MAX_FATFS_ATTEMPT;
+  
+  do
+  {
+      fatfs_handle->res = f_open(&fatfs_handle->fil, filename, FA_CREATE_ALWAYS | FA_WRITE);
+      n_attempt -= 1;
+  } while(n_attempt > 0 && fatfs_handle->res != FR_OK);
+  
+  if(n_attempt == 0)
+  {
+      fatfs_handle->res = f_close(&fatfs_handle->fil);
+      return -2;  // very bad, check if the retarded user inserted the sd card
+  }
+  
+  f_lseek(&fatfs_handle->fil, (fatfs_handle->fil.fsize)); // EOF please
+   
+  fatfs_handle->res = f_write(&fatfs_handle->fil, header, strlen(header), &BytesWritten);
+  
+  //Log the whole curve even the empty points, improve this!
+  for(i = 0; i < IV_CURVE_SIZE; i++)
+  {
+    sprintf(data_string, "V[%d] = %d; I[%d] = %d;\r\n", i, curve->points[i].v, i, curve->points[i].correct_i);
+    fatfs_handle->res = f_write(&fatfs_handle->fil, data_string, strlen(data_string), &BytesWritten);
+  }  
+  
+  fatfs_handle->res = f_close(&fatfs_handle->fil);
+  
+  return 1;
 }
