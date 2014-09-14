@@ -6,12 +6,18 @@
 #ifndef __DYNLOAD_H_
 #define __DYNLOAD_H_
 
-void DL_Init(void);
-void DL_SetCurrent(uint16_t set_current_in_ma);
+#define DL_MAX_CURRENT              (1500)
+#define DL_MIN_CURRENT              (100)
+
+// Return values
+enum DL_RETURN_VAL
+{
+    DL_NOERROR     = 0,
+    DL_OFFSCALE    = -1
+};
+
+int DL_SetCurrent(uint16_t set_current_in_ma);
 uint16_t DL_GetCurrent(void);
 uint16_t DL_GetVoltage(void);
-void DL_Process(void);
-void DL_Timertick(void);
-int DL_GetLockedStatus(void);
 
 #endif

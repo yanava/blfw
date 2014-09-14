@@ -40,7 +40,6 @@ void main(void)
     DAC_HwInit  ();    // DAC Init, for some weird reason should be before ADC
     ADC12_Init  ();    // ADC Init    
     USART2_Init ();    // USART2 Init - Wifi
-    DL_Init     ();    // Dynamic Load Init
     IV_Init     ();    // IV Curve Tracer Initialization  
     
     IV_Perform_Curve();
@@ -49,7 +48,6 @@ void main(void)
     while(1)
     {
         IV_Process();   // IV curve process
-        DL_Process();   // Dynamic Load process 
     }
 }
 

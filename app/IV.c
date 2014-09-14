@@ -8,12 +8,10 @@
 #include "dynload.h"
 #include <stdio.h>
 
-#define IV_CURRENT_CURVE_STEP       (50)
-#define IV_MINIMUM_CURRENT          (250)
-#define IV_VOLTAGE_SC_TOL           (500)
-#define IV_DEFAULT_POINT_DELAY      (10)
+#define IV_CURRENT_CURVE_STEP       (10)
+#define IV_DEFAULT_POINT_DELAY      (2)
 #define IV_EVENT_LIST_SIZE          (10)
-#define IV_CURVE_SIZE               (512)
+#define IV_CURVE_SIZE               ((uint16_t)(DL_MAX_CURRENT/IV_CURRENT_CURVE_STEP))
 #define IV_MAX_FATFS_ATTEMPT        (10)
 
 /************* FATFS STACK INCLUDE ********************************/
@@ -66,7 +64,7 @@ typedef struct IV_TRACER_TAG
     FSM super;
     IV_EVENT_LIST_T events;
     IV_CURVE_T curve;
-    IV_POINT_T last_point;
+    IV_POINT_T point;
     IV_FATFS_T filesystem;
     uint32_t point_delay_ms;
     uint32_t point_delay_counter;
@@ -76,8 +74,7 @@ enum IV_SIGNALS
 { 
     IV_START_NEW_CURVE = FSM_USER_SIGNAL,
     IV_POINT_DELAY_TIMEOUT, 
-    IV_SHORT_CIRCUIT,
-    IV_UNSTABLE_TARGET
+    IV_SWEEP_END
 };
 
 static IV_TRACER_T iv_tracer;
@@ -86,9 +83,7 @@ FSM_State IV_HAND_INITIAL(IV_TRACER_T *me, FSM_Event *e);
 FSM_State IV_HAND_IDLE(IV_TRACER_T *me, FSM_Event *e);
 FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e);
 int IV_Post_Event(IV_TRACER_T *me, IV_EVENT_T *e);
-uint16_t IV_Get_Panel_Voltage(void);
-uint16_t IV_Get_Panel_Current(void);
-void IV_SetCurrent(uint16_t current_in_ma);
+void IV_Finish_Curve(void);
 int IV_ExportCurve(char * filename, IV_CURVE_T *curve, IV_FATFS_T *fatfs_handle);
 
 // Initial state. Just performs the initial transition
@@ -124,30 +119,31 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
     {
         case FSM_ENTRY_SIGNAL:
             // Sets the point delay for first time
-            me->last_point.i = IV_MINIMUM_CURRENT;
-            DL_SetCurrent(me->last_point.i);
+            me->point.i = DL_MIN_CURRENT;
+            DL_SetCurrent(me->point.i);
             me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
         case IV_POINT_DELAY_TIMEOUT:
             // Gets Panel Voltage
-            me->last_point.v = IV_Get_Panel_Voltage();
-            me->last_point.correct_i = IV_Get_Panel_Current();
+            me->point.v = DL_GetVoltage();
+            me->point.correct_i = DL_GetCurrent();
             // Puts point on curve FIFO
-            FIFO_Post(&me->curve.super, &me->last_point);
+            FIFO_Post(&me->curve.super, &me->point);
             // Increments current by a step
-            me->last_point.i += IV_CURRENT_CURVE_STEP;
-            DL_SetCurrent(me->last_point.i);
+            me->point.i += IV_CURRENT_CURVE_STEP;
+            if(DL_SetCurrent(me->point.i) == DL_OFFSCALE) 
+                IV_Finish_Curve();
             // Sets the point delay
             me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
-        case IV_SHORT_CIRCUIT:
+        case IV_SWEEP_END:
             // Curve done
             IV_ExportCurve("CURVE.TXT",&me->curve,&me->filesystem);
             return FSM_TRAN(me,IV_HAND_IDLE);
         case FSM_EXIT_SIGNAL:
             // Set DAC to zero here, to reduce temperature
-            me->last_point.i = IV_MINIMUM_CURRENT;
-            DL_SetCurrent(me->last_point.i);
+            me->point.i = DL_MIN_CURRENT;
+            DL_SetCurrent(me->point.i);
             return FSM_HANDLED();   
     }
     // Default: Handled
@@ -163,29 +159,15 @@ void IV_Perform_Curve(void)
     IV_Post_Event(&iv_tracer, &iv_e);  
 }
 
-uint16_t IV_Get_Panel_Current(void)
-{   
-    uint16_t current = DL_GetCurrent();
-    
-    return (current);
-}
-
-// Gets the panel voltage
-uint16_t IV_Get_Panel_Voltage(void)
+// Finishes the curve
+void IV_Finish_Curve(void)
 {
     IV_EVENT_T iv_e;
     
-    uint16_t voltage = DL_GetVoltage();
-    
-    //If panel voltage drops too much, issues short circuit
-    if (voltage <= IV_VOLTAGE_SC_TOL)
-    {
-        iv_e.super.signal = IV_SHORT_CIRCUIT;
-        IV_Post_Event(&iv_tracer, &iv_e);
-    }
-    
-    return (voltage); 
+    iv_e.super.signal = IV_SWEEP_END;
+    IV_Post_Event(&iv_tracer, &iv_e);  
 }
+
 
 // Post an event to the IV Event list
 int IV_Post_Event(IV_TRACER_T *me, IV_EVENT_T *iv_e)

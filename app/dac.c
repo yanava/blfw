@@ -59,7 +59,7 @@ int DAC_SetDACValInMilivolts(uint32_t DAC_Channel, uint16_t val)
 {
     // If value is above reference voltage, return an error
     if (val > ADC12_GetVref()) 
-        return DAC_VALUE_OUTSIDE_BOUNDARIES;
+        return DAC_OFFSCALE;
     
     switch(DAC_Channel)
     {
@@ -82,7 +82,7 @@ int DAC_SetBothDacsInMilivolts(uint16_t dac1_val, uint16_t dac2_val)
 {
     // If either value is above reference voltage, return an error
     if (dac1_val > ADC12_GetVref() || dac2_val > ADC12_GetVref()) 
-        return DAC_VALUE_OUTSIDE_BOUNDARIES;
+        return DAC_OFFSCALE;
     
     // Set both voltages using the formula on Page 152 of UM1061
     DAC_SetDualChannelData(DAC_Align_12b_R,

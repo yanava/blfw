@@ -48,6 +48,7 @@ uint16_t ADC12_GetOutputBufferSample(enum ADC12_CHANNELS const ch)
     DMA_ITConfig(DMA2_Stream0, DMA_IT_TC, DISABLE);
     
     value = ((uint16_t) (adc12_output_buffer[ch]*ADC12_GetVref()/ADC12_MAX_VALUE));
+   
     
     // Re enables DMA Interrupt for proper operation
     DMA_ITConfig(DMA2_Stream0, DMA_IT_TC, ENABLE);
