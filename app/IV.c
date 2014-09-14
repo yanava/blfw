@@ -89,6 +89,7 @@ int IV_Post_Event(IV_TRACER_T *me, IV_EVENT_T *e);
 uint16_t IV_Get_Panel_Voltage(void);
 uint16_t IV_Get_Panel_Current(void);
 void IV_SetCurrent(uint16_t current_in_ma);
+int IV_ExportCurve(char * filename, IV_CURVE_T *curve, IV_FATFS_T *fatfs_handle);
 
 // Initial state. Just performs the initial transition
 FSM_State IV_HAND_INITIAL(IV_TRACER_T *me, FSM_Event *e)
@@ -141,6 +142,7 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
             return FSM_HANDLED();
         case IV_SHORT_CIRCUIT:
             // Curve done
+            IV_ExportCurve("CURVE.TXT",&me->curve,&me->filesystem);
             return FSM_TRAN(me,IV_HAND_IDLE);
         case FSM_EXIT_SIGNAL:
             // Set DAC to zero here, to reduce temperature

@@ -1870,6 +1870,15 @@
     </file>
   </group>
   <group>
+    <name>Eval</name>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL\stm322xg_eval.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL\stm322xg_eval_sdio_sd.c</name>
+    </file>
+  </group>
+  <group>
     <name>FatFs</name>
     <file>
       <name>$PROJ_DIR$\..\Utilities\FatFs\diskio.h</name>
@@ -1888,9 +1897,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\Utilities\FatFs\sdio-stm32f2.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL\stm322xg_eval_sdio_sd.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Utilities\FatFs\typedefs.h</name>

@@ -43,6 +43,8 @@ void main(void)
     DL_Init     ();    // Dynamic Load Init
     IV_Init     ();    // IV Curve Tracer Initialization  
     
+    IV_Perform_Curve();
+    
     // Main loop will execute forever
     while(1)
     {
