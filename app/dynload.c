@@ -17,7 +17,8 @@ int  DL_SetCurrent(uint16_t set_current_in_ma)
 {        
     uint16_t target_voltage = (uint16_t) (set_current_in_ma * DL_CURRENT_RESISTOR);
     
-    if(DAC_SetDACValInMilivolts(DAC_Channel_1,target_voltage) == DAC_OFFSCALE)
+    if(DAC_SetDACValInMilivolts(DAC_Channel_1,target_voltage) == DAC_OFFSCALE || 
+       set_current_in_ma > DL_MAX_CURRENT || set_current_in_ma < DL_MIN_CURRENT)
        return DL_OFFSCALE;
     else
        return DL_NOERROR;

@@ -223,66 +223,66 @@ void IV_Timertick (void)
     }
 }
 
-//TODO: typedef enum for return values
-// fatfs_handle is the object responsible for fat32 interface
+// TODO: typedef enum for return values
 int IV_ExportCurve(char * filename, IV_CURVE_T *curve, IV_FATFS_T *fatfs_handle)
 {
   uint32_t i;
-  char header[64];
-  char data_string[128];
+  char aux_string[64];
   UINT BytesWritten;
   unsigned int n_attempt;
   
   //check if the caller is a orc
-  if(filename == 0)
-  {
-    return 0;
-  }
-  
-  //check if the requested curve has enough points
-  if(curve->super.elements == 0)
-  {
-    return 0;
-  }
-  
+  if(filename == 0) 
+      return 0;
+ 
+  // Enable SD Interrupt 
   SD_InterruptEnable();
   
+  // Avoids having previous trash on fatfs handle
   memset(&fatfs_handle->fs32, 0, sizeof(FATFS));
   
+  // Mounts the file system on the selected handle
   fatfs_handle->res = f_mount(0, &fatfs_handle->fs32);
-  
+ 
+  // If mounting the file system failed, do not export the curve
   if(fatfs_handle->res != FR_OK)
-  {
-    return -1;
-  }
-  
+      return -1;
+    
+  // Closes any open files
   fatfs_handle->res = f_close(&fatfs_handle->fil);
   
+  // Number of tries for creating a new file
   n_attempt = IV_MAX_FATFS_ATTEMPT;
   
+  // Tries to create a file with the filename argument. If not successful try
+  // again until counter expires. 
   do
   {
       fatfs_handle->res = f_open(&fatfs_handle->fil, filename, FA_CREATE_ALWAYS | FA_WRITE);
       n_attempt -= 1;
   } while(n_attempt > 0 && fatfs_handle->res != FR_OK);
   
-  if(n_attempt == 0)
+  // If number of tries reach zero and still no success
+  if(n_attempt == 0 && fatfs_handle->res != FR_OK)
   {
       fatfs_handle->res = f_close(&fatfs_handle->fil);
       return -2;  // very bad, check if the retarded user inserted the sd card
   }
   
-  f_lseek(&fatfs_handle->fil, (fatfs_handle->fil.fsize)); // EOF please
-   
-  fatfs_handle->res = f_write(&fatfs_handle->fil, header, strlen(header), &BytesWritten);
+  // Seeks the end of file (maybe that's irrelevant, because the file is always created)
+  f_lseek(&fatfs_handle->fil, (fatfs_handle->fil.fsize));
+     
+  // Prints out a data header
+  sprintf(aux_string, "Voltage (mV);Set Current (mA); Measured Current (mA)\n");
   
   //Log the whole curve even the empty points, improve this!
   for(i = 0; i < IV_CURVE_SIZE; i++)
   {
-    sprintf(data_string, "V[%d] = %d; I[%d] = %d;\r\n", i, curve->points[i].v, i, curve->points[i].correct_i);
-    fatfs_handle->res = f_write(&fatfs_handle->fil, data_string, strlen(data_string), &BytesWritten);
+    sprintf(aux_string, "%d;%d;%d\n" ,curve->points[i].v, curve->points[i].i, curve->points[i].correct_i);
+    fatfs_handle->res = f_write(&fatfs_handle->fil, aux_string, strlen(aux_string), &BytesWritten);
   }  
   
+  // After exporting the curve, 
   fatfs_handle->res = f_close(&fatfs_handle->fil);
   
   return 1;
