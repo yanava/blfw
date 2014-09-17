@@ -23,5 +23,4 @@
 *.hex
 
 #Debug files
-app/Debug/*
-app/settings/*
+app/*
