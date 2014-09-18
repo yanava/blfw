@@ -7,7 +7,7 @@
 
 // ADC IIR Filter Coefficients
 // I made a very cool Excel to show these are good values
-#define ADC_IIR_C0  (0.8f)             
+#define ADC_IIR_C0  (0.90f)             
 #define ADC_IIR_C1  (1.00f-ADC_IIR_C0)
 
 // ADC1 address as stated in RM0033 PG51 and 249

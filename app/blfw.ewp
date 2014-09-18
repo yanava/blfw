@@ -2017,6 +2017,15 @@
     </file>
   </group>
   <group>
+    <name>RTC</name>
+    <file>
+      <name>$PROJ_DIR$\rtc.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\rtc.h</name>
+    </file>
+  </group>
+  <group>
     <name>SOLAR</name>
     <file>
       <name>$PROJ_DIR$\dynload.c</name>
