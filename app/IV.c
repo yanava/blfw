@@ -10,10 +10,12 @@
 
 #define IV_CURRENT_CURVE_STEP       (50)
 #define IV_DEFAULT_POINT_DELAY      (5)
+#define IV_DEFAULT_CURVE_DELAY      (60E3) 
 #define IV_EVENT_LIST_SIZE          (10)
 #define IV_CURVE_SIZE               ((uint16_t)((DL_MAX_CURRENT-DL_MIN_CURRENT)/IV_CURRENT_CURVE_STEP))
 #define IV_MAX_FATFS_ATTEMPT        (10)
-#define IV_PWR_SCALE_FACTOR         (1E3)      
+#define IV_PWR_SCALE_FACTOR         (1E3)
+#define IV_CURVE_NAME_MAX_CHARS     (32)
 
 /************* FATFS STACK INCLUDE ********************************/
 #include "stm322xg_eval_sdio_sd.h"
@@ -65,17 +67,22 @@ typedef struct IV_TRACER_TAG
     FSM super;
     IV_EVENT_LIST_T events;
     IV_POINT_T curve[IV_CURVE_SIZE];
+    char curve_name[IV_CURVE_NAME_MAX_CHARS];
     uint16_t  index;
+    uint16_t  curve_index;
     uint16_t  set_i;
     IV_FATFS_T filesystem;
     uint32_t point_delay_ms;
     uint32_t point_delay_counter;
+    uint32_t curve_delay_ms;
+    uint32_t curve_delay_counter;
 } IV_TRACER_T;
 
 enum IV_SIGNALS
 { 
     IV_START_NEW_CURVE = FSM_USER_SIGNAL,
-    IV_POINT_DELAY_TIMEOUT, 
+    IV_POINT_DELAY_TIMEOUT,
+    IV_CURVE_DELAY_TIMEOUT,
     IV_SWEEP_END
 };
 
@@ -92,6 +99,8 @@ void IV_Finish_Curve(void);
 // Initial state. Just performs the initial transition
 FSM_State IV_HAND_INITIAL(IV_TRACER_T *me, FSM_Event *e)
 {
+    me->curve_index = 0;
+    
     // Goes to IDLE mode
     return FSM_TRAN(me,IV_HAND_IDLE);
 }
@@ -107,6 +116,7 @@ FSM_State IV_HAND_IDLE(IV_TRACER_T *me, FSM_Event *e)
             DL_SetCurrent(me->set_i);
             return FSM_HANDLED();
         case IV_START_NEW_CURVE:
+        case IV_CURVE_DELAY_TIMEOUT:
             // Goes to curve extraction state
             return FSM_TRAN(me,IV_HAND_OPER);
         case FSM_EXIT_SIGNAL:
@@ -121,7 +131,7 @@ FSM_State IV_HAND_IDLE(IV_TRACER_T *me, FSM_Event *e)
 
 // Operation, getting all points until DAC Full scale or Short Circuit
 FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
-{
+{    
     switch (e->signal)
     {
         case FSM_ENTRY_SIGNAL:
@@ -144,9 +154,12 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
             return FSM_HANDLED();
         case IV_SWEEP_END:
             // Curve done
-            IV_ExportCurve(me,"CURVE.TXT");
+            sprintf(me->curve_name, "CURVE_%d.TXT", me->curve_index); 
+            IV_ExportCurve(me,(char*) &me->curve_name);
             return FSM_TRAN(me,IV_HAND_IDLE);
         case FSM_EXIT_SIGNAL:
+            me->curve_index++;
+            me->curve_delay_counter = me->curve_delay_ms;
             return FSM_HANDLED();   
     }
     // Default: Handled
@@ -214,13 +227,25 @@ void IV_Process(void)
 void IV_Timertick (void)
 {
     IV_EVENT_T iv_e; 
-
+    
+    // Point Delay
     if(iv_tracer.point_delay_counter > 0)
     {
         iv_tracer.point_delay_counter--;
         if (iv_tracer.point_delay_counter == 0)
         {
             iv_e.super.signal = IV_POINT_DELAY_TIMEOUT;
+            IV_Post_Event(&iv_tracer, &iv_e);
+        }
+    }
+    
+    // Curve Delay
+    if(iv_tracer.curve_delay_counter > 0)
+    {
+        iv_tracer.curve_delay_counter--;
+        if (iv_tracer.curve_delay_counter == 0)
+        {
+            iv_e.super.signal = IV_CURVE_DELAY_TIMEOUT;
             IV_Post_Event(&iv_tracer, &iv_e);
         }
     }
