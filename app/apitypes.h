@@ -9,40 +9,40 @@
 
 #include <stdint.h>
 
-typedef unsigned char  uint8;
-typedef signed char   int8;
-typedef unsigned short uint16;
-typedef signed short   int16;
-typedef unsigned long  uint32;
-typedef signed long    int32;
-
+// Hardware Address Definition
 typedef struct bd_addr_t
 {
-    unsigned char addr[6];
-
-}bd_addr;
+    uint8_t addr[6];
+} bd_addr;
 
 typedef bd_addr hw_addr;
+
+// 8bit data array
 typedef struct
 {
-    unsigned char len;
-    unsigned char data[];
+    uint8_t len;
+    uint8_t data[];
 }uint8array;
+
+// 16bit data array
 typedef struct
 {
-    unsigned short len;
-    unsigned char data[];
+    uint16_t len;
+    uint8_t data[];
 }uint16array;
 
+// String array
 typedef struct
 {
-    unsigned char len;
-    signed char data[];
-}string;
+    uint8_t len;
+    int8_t  data[];
+} string;
 
+// IP Address Type
 typedef union
 {
         uint32_t u;
         uint8_t  a[4];
-}ipv4;
+} ipv4;
+
 #endif /* APITYPES_H_ */

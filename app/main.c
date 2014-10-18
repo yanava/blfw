@@ -5,10 +5,8 @@
 #include "adc12.h"
 #include "dynload.h"
 #include "IV.h"
+#include "wf121.h"
 #include <stdio.h>
-
-/* Application Switches for tests */
-#define USB_ECHO_VCP_TEST
 
 /******************************************************************************/
 

@@ -8,10 +8,10 @@
 #include "dynload.h"
 #include <stdio.h>
 
-#define IV_CURRENT_CURVE_STEP       (50)
+#define IV_CURRENT_CURVE_STEP       (10)
 #define IV_DEFAULT_POINT_DELAY      (5)
 #define IV_DEFAULT_CURVE_DELAY      (60E3) 
-#define IV_EVENT_LIST_SIZE          (10)
+#define IV_EVENT_LIST_SIZE          (20)
 #define IV_CURVE_SIZE               ((uint16_t)((DL_MAX_CURRENT-DL_MIN_CURRENT)/IV_CURRENT_CURVE_STEP))
 #define IV_MAX_FATFS_ATTEMPT        (10)
 #define IV_PWR_SCALE_FACTOR         (1E3)
@@ -55,18 +55,20 @@ typedef struct IV_POINT_TAG
     uint32_t p;
 } IV_POINT_T;
 
-// IV Curve type
-typedef struct IV_CURVE_TAG
+typedef struct IV_INFO_TAG
 {
-    FIFO_T     super;
-    IV_POINT_T points[IV_CURVE_SIZE];
-} IV_CURVE_T;
+    IV_POINT_T mpp;
+    uint32_t   mpp_index;
+    uint16_t   voc;
+    uint16_t   isc;
+} IV_INFO_T;
 
 typedef struct IV_TRACER_TAG
 {
     FSM super;
     IV_EVENT_LIST_T events;
     IV_POINT_T curve[IV_CURVE_SIZE];
+    IV_INFO_T  parameters;
     char curve_name[IV_CURVE_NAME_MAX_CHARS];
     uint16_t  index;
     uint16_t  curve_index;
@@ -94,7 +96,7 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e);
 int IV_Post_Event(IV_TRACER_T *me, IV_EVENT_T *e);
 int IV_ExportCurve(IV_TRACER_T *me, char * filename);
 void IV_Finish_Curve(void);
-
+void IV_GetPointValue(IV_TRACER_T *me);
 
 // Initial state. Just performs the initial transition
 FSM_State IV_HAND_INITIAL(IV_TRACER_T *me, FSM_Event *e)
@@ -139,22 +141,21 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
             me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
         case IV_POINT_DELAY_TIMEOUT:
-            // Gets voltage (mV), current (mA) and calculates power (mW)
-            me->curve[me->index].v = DL_GetVoltage();
-            me->curve[me->index].i = DL_GetCurrent();
-            me->curve[me->index].p = (uint32_t) ((me->curve[me->index].i * me->curve[me->index].v) / IV_PWR_SCALE_FACTOR);
-            // Increments index
+            // Gets the point value
+            IV_GetPointValue(me);
+            // Increment index. If overflow, end curve. 
             me->index++;
+            if(me->index == IV_CURVE_SIZE)
+                IV_Finish_Curve();
             // Increments current by a step
             me->set_i += IV_CURRENT_CURVE_STEP;
-            if(DL_SetCurrent(me->set_i) == DL_OFFSCALE) 
-                IV_Finish_Curve();
+            DL_SetCurrent(me->set_i);
             // Sets the point delay
             me->point_delay_counter = me->point_delay_ms;
             return FSM_HANDLED();
         case IV_SWEEP_END:
             // Curve done
-            sprintf(me->curve_name, "CURVE_%d.TXT", me->curve_index); 
+            sprintf(me->curve_name, "CURVE_%04d.TXT", me->curve_index); 
             IV_ExportCurve(me,(char*) &me->curve_name);
             return FSM_TRAN(me,IV_HAND_IDLE);
         case FSM_EXIT_SIGNAL:
@@ -164,6 +165,32 @@ FSM_State IV_HAND_OPER(IV_TRACER_T *me, FSM_Event *e)
     }
     // Default: Handled
     return FSM_HANDLED();
+}
+
+// Gets the point value
+void IV_GetPointValue(IV_TRACER_T *me)
+{   
+    // Gets voltage (mV), current (mA) and calculates power (mW)
+    me->curve[me->index].v = DL_GetVoltage();
+    me->curve[me->index].i = DL_GetCurrent();
+    me->curve[me->index].p = (uint32_t) ((me->curve[me->index].i * me->curve[me->index].v) / IV_PWR_SCALE_FACTOR);  
+    
+    // PMax analysis
+    if (me->curve[me->index].p > me->parameters.mpp.p)
+    {
+        me->parameters.mpp.p = me->curve[me->index].p;
+        me->parameters.mpp.v = me->curve[me->index].v;
+        me->parameters.mpp.i = me->curve[me->index].i;
+    }
+    
+    // Voc Analysis (make this better)
+    if (me->index == 0)
+        me->parameters.voc = me->curve[me->index].v;
+    
+    // Isc Analysis
+    if (me->parameters.isc < me->curve[me->index].i)
+        me->parameters.isc = me->curve[me->index].i;
+    
 }
 
 // Starts a new IV Curve
@@ -184,7 +211,6 @@ void IV_Finish_Curve(void)
     IV_Post_Event(&iv_tracer, &iv_e);  
 }
 
-
 // Post an event to the IV Event list
 int IV_Post_Event(IV_TRACER_T *me, IV_EVENT_T *iv_e)
 {       
@@ -200,6 +226,7 @@ void IV_Init(void)
 {
     // Initializes point delay in ms
     iv_tracer.point_delay_ms = IV_DEFAULT_POINT_DELAY;
+    iv_tracer.curve_delay_ms = IV_DEFAULT_CURVE_DELAY;
     
     // Initializes FIFO
     FIFO_Init(&iv_tracer.events.super, 
@@ -299,15 +326,34 @@ int IV_ExportCurve(IV_TRACER_T *me, char *filename)
   
   // Seeks the end of file (maybe that's irrelevant, because the file is always created)
   f_lseek(&me->filesystem.fil, (me->filesystem.fil.fsize));
-     
+  
+  // Puts out the entire Solar Cell and MPP Analysis first  
+  sprintf(aux_string, "Solar Cell Analysis\r\n");
+  me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
+  sprintf(aux_string, "------------------- \r\n");
+  me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
+  sprintf(aux_string, "Voc= %d mV \r\n" , me->parameters.voc);
+  me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
+  sprintf(aux_string, "Isc= %d mA \r\n" , me->parameters.isc);
+  me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
+  sprintf(aux_string, "Pmax= %d mW \r\n" , me->parameters.mpp.p);
+  me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
+  sprintf(aux_string, "Vmax= %d mV \r\n" , me->parameters.mpp.v);
+  me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
+  sprintf(aux_string, "Imax= %d mA \r\n" , me->parameters.mpp.i);
+  me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
+  sprintf(aux_string, "------------------- \r\n");
+  me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
+          
+  
   // Prints out a data header
-  sprintf(aux_string, "Voltage (mV); Current (mA); Power (mW) \n");
+  sprintf(aux_string, "Current (mA); Voltage (mV); Power (mW) \n");
   
   //Log the whole curve even the empty points, improve this!
   for(i = 0; i < me->index; i++)
   {
-    sprintf(aux_string, "%d;%d;%d\n" , me->curve[i].v, me->curve[i].i, me->curve[i].p);
-   me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
+    sprintf(aux_string, "%d;%d;%d \r\n" , me->curve[i].i, me->curve[i].v, me->curve[i].p);
+    me->filesystem.res = f_write(&me->filesystem.fil, aux_string, strlen(aux_string), &BytesWritten);
   }  
   
   // After exporting the curve, 

@@ -5,7 +5,7 @@
 #ifndef __WF121_H
 #define __WF121_H
 
-
+void WF121_Test(void);
 
 
 

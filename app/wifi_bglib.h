@@ -18,7 +18,7 @@
  *          BGLIB_DEFINE();
  *
  *      Declare and define output function, prototype is:
- *          void my_output(uint8 len1,uint8* data1,uint16 len2,uint8* data2);
+ *          void my_output(uint8_t len1,uint8_t* data1,uint16_t len2,uint8_t* data2);
  *
  *          function sends len1 amount of data from pointer data1 to device, and then sends
  *          len2 amount of data from pointer data2 to device
@@ -62,7 +62,7 @@
  *      BGLIB uses packed structures because they're damn fucking lazy:
  *      __packed struct wifi_msg_dfu_reset_cmd_t
  *      {
- *          uint8	dfu;
+ *          uint8_t	dfu;
  *      };
  *
  *
@@ -74,21 +74,21 @@
 
 struct wifi_header
 {
-    uint8  type_hilen;
-    uint8  lolen;
-    uint8  cls;
-    uint8  command;
+    uint8_t  type_hilen;
+    uint8_t  lolen;
+    uint8_t  cls;
+    uint8_t  command;
 };
 
 #define BGLIB_DEFINE() struct wifi_cmd_packet bglib_temp_msg;\
-void (*bglib_output)(uint8 len1,uint8* data1,uint16 len2,uint8* data2);
+void (*bglib_output)(uint8_t len1,uint8_t* data1,uint16_t len2,uint8_t* data2);
 #define BGLIB_INITIALIZE(X) bglib_output=X;
-#define BGLIB_MSG_ID(BUF) ((*((uint32*)BUF))&0xffff00f8)
+#define BGLIB_MSG_ID(BUF) ((*((uint32_t*)BUF))&0xffff00f8)
 #define BGLIB_MSG(X) ((struct wifi_cmd_packet*)X)
 #define BGLIB_MSG_HEADER_LEN (4)
-#define BGLIB_MSG_LEN(BUF) ((((*((uint32*)BUF))&0x7)<<8)|(((*((uint32*)BUF))&0xff00)>>8))
+#define BGLIB_MSG_LEN(BUF) ((((*((uint32_t*)BUF))&0x7)<<8)|(((*((uint32_t*)BUF))&0xff00)>>8))
 #define BGLIB_MSG_MAXLEN 2052
-extern void (*bglib_output)(uint8 len1,uint8* data1,uint16 len2,uint8* data2);
+extern void (*bglib_output)(uint8_t len1,uint8_t* data1,uint16_t len2,uint8_t* data2);
 
 enum system_main_state
 {
@@ -182,16 +182,16 @@ enum hardware_alarm_repeat_mask
 
 enum wifi_parameter_types
 {
-    wifi_msg_parameter_uint8=2,
-    wifi_msg_parameter_int8=3,
-    wifi_msg_parameter_uint16=4,
-    wifi_msg_parameter_int16=5,
-    wifi_msg_parameter_uint32=6,
+    wifi_msg_parameter_uint8_t=2,
+    wifi_msg_parameter_int8_t=3,
+    wifi_msg_parameter_uint16_t=4,
+    wifi_msg_parameter_int16_t=5,
+    wifi_msg_parameter_uint32_t=6,
     wifi_msg_parameter_int32=7,
     wifi_msg_parameter_uint8array=8,
     wifi_msg_parameter_string=9,
     wifi_msg_parameter_hwaddr=10,
-    wifi_msg_parameter_uint16array=11
+    wifi_msg_parameter_uint16_tarray=11
 };
 
 enum wifi_msg_types
@@ -207,198 +207,198 @@ enum wifi_dev_types
     wifi_dev_type_iwrap  =0x10
 };
 
-#define	wifi_cmd_dfu_reset_id                          	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00000000)
-#define	wifi_cmd_dfu_flash_set_address_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01000000)
-#define	wifi_cmd_dfu_flash_upload_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02000000)
-#define	wifi_cmd_dfu_flash_upload_finish_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03000000)
-#define	wifi_cmd_system_sync_id                        	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00010000)
-#define	wifi_cmd_system_reset_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01010000)
-#define	wifi_cmd_system_hello_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02010000)
-#define	wifi_cmd_system_set_max_power_saving_state_id  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03010000)
-#define	wifi_cmd_config_get_mac_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00020000)
-#define	wifi_cmd_config_set_mac_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01020000)
-#define	wifi_cmd_sme_wifi_on_id                        	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00030000)
-#define	wifi_cmd_sme_wifi_off_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01030000)
-#define	wifi_cmd_sme_power_on_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02030000)
-#define	wifi_cmd_sme_start_scan_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03030000)
-#define	wifi_cmd_sme_stop_scan_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04030000)
-#define	wifi_cmd_sme_set_password_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05030000)
-#define	wifi_cmd_sme_connect_bssid_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x06030000)
-#define	wifi_cmd_sme_connect_ssid_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x07030000)
-#define	wifi_cmd_sme_disconnect_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x08030000)
-#define	wifi_cmd_sme_set_scan_channels_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x09030000)
-#define	wifi_cmd_sme_set_operating_mode_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0A030000)
-#define	wifi_cmd_sme_start_ap_mode_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0B030000)
-#define	wifi_cmd_sme_stop_ap_mode_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0C030000)
-#define	wifi_cmd_sme_scan_results_sort_rssi_id         	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0D030000)
-#define	wifi_cmd_sme_ap_client_disconnect_id           	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0E030000)
-#define	wifi_cmd_sme_set_ap_password_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0F030000)
-#define	wifi_cmd_sme_set_ap_max_clients_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x10030000)
-#define	wifi_cmd_sme_start_wps_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x11030000)
-#define	wifi_cmd_sme_stop_wps_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x12030000)
-#define	wifi_cmd_sme_get_signal_quality_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x13030000)
-#define	wifi_cmd_tcpip_start_tcp_server_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00040000)
-#define	wifi_cmd_tcpip_tcp_connect_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01040000)
-#define	wifi_cmd_tcpip_start_udp_server_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02040000)
-#define	wifi_cmd_tcpip_udp_connect_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03040000)
-#define	wifi_cmd_tcpip_configure_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04040000)
-#define	wifi_cmd_tcpip_dns_configure_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05040000)
-#define	wifi_cmd_tcpip_dns_gethostbyname_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x06040000)
-#define	wifi_cmd_tcpip_udp_bind_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x07040000)
-#define	wifi_cmd_tcpip_dhcp_set_hostname_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x08040000)
-#define	wifi_cmd_endpoint_send_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00050000)
-#define	wifi_cmd_endpoint_set_streaming_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01050000)
-#define	wifi_cmd_endpoint_set_active_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02050000)
-#define	wifi_cmd_endpoint_set_streaming_destination_id 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03050000)
-#define	wifi_cmd_endpoint_close_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04050000)
-#define	wifi_cmd_endpoint_set_transmit_size_id         	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05050000)
-#define	wifi_cmd_hardware_set_soft_timer_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00060000)
-#define	wifi_cmd_hardware_external_interrupt_config_id 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01060000)
-#define	wifi_cmd_hardware_change_notification_config_id	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02060000)
-#define	wifi_cmd_hardware_change_notification_pullup_id	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03060000)
-#define	wifi_cmd_hardware_io_port_config_direction_id  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04060000)
-#define	wifi_cmd_hardware_io_port_config_open_drain_id 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05060000)
-#define	wifi_cmd_hardware_io_port_write_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x06060000)
-#define	wifi_cmd_hardware_io_port_read_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x07060000)
-#define	wifi_cmd_hardware_output_compare_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x08060000)
-#define	wifi_cmd_hardware_adc_read_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x09060000)
-#define	wifi_cmd_hardware_rtc_init_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0A060000)
-#define	wifi_cmd_hardware_rtc_set_time_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0B060000)
-#define	wifi_cmd_hardware_rtc_get_time_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0C060000)
-#define	wifi_cmd_hardware_rtc_set_alarm_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0D060000)
-#define	wifi_cmd_flash_ps_defrag_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00070000)
-#define	wifi_cmd_flash_ps_dump_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01070000)
-#define	wifi_cmd_flash_ps_erase_all_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02070000)
-#define	wifi_cmd_flash_ps_save_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03070000)
-#define	wifi_cmd_flash_ps_load_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04070000)
-#define	wifi_cmd_flash_ps_erase_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05070000)
-#define	wifi_cmd_i2c_start_read_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00080000)
-#define	wifi_cmd_i2c_start_write_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01080000)
-#define	wifi_cmd_i2c_stop_id                           	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02080000)
-#define	wifi_cmd_https_enable_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00090000)
-#define	wifi_cmd_ethernet_set_dataroute_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x000A0000)
-#define	wifi_cmd_ethernet_close_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x010A0000)
-#define	wifi_cmd_ethernet_connected_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x020A0000)
-#define	wifi_rsp_dfu_reset_id                          	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00000000)
-#define	wifi_rsp_dfu_flash_set_address_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01000000)
-#define	wifi_rsp_dfu_flash_upload_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02000000)
-#define	wifi_rsp_dfu_flash_upload_finish_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03000000)
-#define	wifi_rsp_system_sync_id                        	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00010000)
-#define	wifi_rsp_system_reset_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01010000)
-#define	wifi_rsp_system_hello_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02010000)
-#define	wifi_rsp_system_set_max_power_saving_state_id  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03010000)
-#define	wifi_rsp_config_get_mac_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00020000)
-#define	wifi_rsp_config_set_mac_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01020000)
-#define	wifi_rsp_sme_wifi_on_id                        	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00030000)
-#define	wifi_rsp_sme_wifi_off_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01030000)
-#define	wifi_rsp_sme_power_on_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02030000)
-#define	wifi_rsp_sme_start_scan_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03030000)
-#define	wifi_rsp_sme_stop_scan_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04030000)
-#define	wifi_rsp_sme_set_password_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05030000)
-#define	wifi_rsp_sme_connect_bssid_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x06030000)
-#define	wifi_rsp_sme_connect_ssid_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x07030000)
-#define	wifi_rsp_sme_disconnect_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x08030000)
-#define	wifi_rsp_sme_set_scan_channels_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x09030000)
-#define	wifi_rsp_sme_set_operating_mode_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0A030000)
-#define	wifi_rsp_sme_start_ap_mode_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0B030000)
-#define	wifi_rsp_sme_stop_ap_mode_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0C030000)
-#define	wifi_rsp_sme_scan_results_sort_rssi_id         	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0D030000)
-#define	wifi_rsp_sme_ap_client_disconnect_id           	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0E030000)
-#define	wifi_rsp_sme_set_ap_password_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0F030000)
-#define	wifi_rsp_sme_set_ap_max_clients_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x10030000)
-#define	wifi_rsp_sme_start_wps_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x11030000)
-#define	wifi_rsp_sme_stop_wps_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x12030000)
-#define	wifi_rsp_sme_get_signal_quality_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x13030000)
-#define	wifi_rsp_tcpip_start_tcp_server_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00040000)
-#define	wifi_rsp_tcpip_tcp_connect_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01040000)
-#define	wifi_rsp_tcpip_start_udp_server_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02040000)
-#define	wifi_rsp_tcpip_udp_connect_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03040000)
-#define	wifi_rsp_tcpip_configure_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04040000)
-#define	wifi_rsp_tcpip_dns_configure_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05040000)
-#define	wifi_rsp_tcpip_dns_gethostbyname_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x06040000)
-#define	wifi_rsp_tcpip_udp_bind_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x07040000)
-#define	wifi_rsp_tcpip_dhcp_set_hostname_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x08040000)
-#define	wifi_rsp_endpoint_send_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00050000)
-#define	wifi_rsp_endpoint_set_streaming_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01050000)
-#define	wifi_rsp_endpoint_set_active_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02050000)
-#define	wifi_rsp_endpoint_set_streaming_destination_id 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03050000)
-#define	wifi_rsp_endpoint_close_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04050000)
-#define	wifi_rsp_endpoint_set_transmit_size_id         	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05050000)
-#define	wifi_rsp_hardware_set_soft_timer_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00060000)
-#define	wifi_rsp_hardware_external_interrupt_config_id 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01060000)
-#define	wifi_rsp_hardware_change_notification_config_id	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02060000)
-#define	wifi_rsp_hardware_change_notification_pullup_id	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03060000)
-#define	wifi_rsp_hardware_io_port_config_direction_id  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04060000)
-#define	wifi_rsp_hardware_io_port_config_open_drain_id 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05060000)
-#define	wifi_rsp_hardware_io_port_write_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x06060000)
-#define	wifi_rsp_hardware_io_port_read_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x07060000)
-#define	wifi_rsp_hardware_output_compare_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x08060000)
-#define	wifi_rsp_hardware_adc_read_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x09060000)
-#define	wifi_rsp_hardware_rtc_init_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0A060000)
-#define	wifi_rsp_hardware_rtc_set_time_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0B060000)
-#define	wifi_rsp_hardware_rtc_get_time_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0C060000)
-#define	wifi_rsp_hardware_rtc_set_alarm_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0D060000)
-#define	wifi_rsp_flash_ps_defrag_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00070000)
-#define	wifi_rsp_flash_ps_dump_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01070000)
-#define	wifi_rsp_flash_ps_erase_all_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02070000)
-#define	wifi_rsp_flash_ps_save_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03070000)
-#define	wifi_rsp_flash_ps_load_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04070000)
-#define	wifi_rsp_flash_ps_erase_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05070000)
-#define	wifi_rsp_i2c_start_read_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00080000)
-#define	wifi_rsp_i2c_start_write_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01080000)
-#define	wifi_rsp_i2c_stop_id                           	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02080000)
-#define	wifi_rsp_https_enable_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00090000)
-#define	wifi_rsp_ethernet_set_dataroute_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x000A0000)
-#define	wifi_rsp_ethernet_close_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x010A0000)
-#define	wifi_rsp_ethernet_connected_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x020A0000)
-#define	wifi_evt_dfu_boot_id                           	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00000000)
-#define	wifi_evt_system_boot_id                        	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00010000)
-#define	wifi_evt_system_state_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01010000)
-#define	wifi_evt_system_sw_exception_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02010000)
-#define	wifi_evt_system_power_saving_state_id          	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03010000)
-#define	wifi_evt_config_mac_address_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00020000)
-#define	wifi_evt_sme_wifi_is_on_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00030000)
-#define	wifi_evt_sme_wifi_is_off_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01030000)
-#define	wifi_evt_sme_scan_result_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02030000)
-#define	wifi_evt_sme_scan_result_drop_id               	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03030000)
-#define	wifi_evt_sme_scanned_id                        	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x04030000)
-#define	wifi_evt_sme_connected_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x05030000)
-#define	wifi_evt_sme_disconnected_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x06030000)
-#define	wifi_evt_sme_interface_status_id               	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x07030000)
-#define	wifi_evt_sme_connect_failed_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x08030000)
-#define	wifi_evt_sme_connect_retry_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x09030000)
-#define	wifi_evt_sme_ap_mode_started_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0A030000)
-#define	wifi_evt_sme_ap_mode_stopped_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0B030000)
-#define	wifi_evt_sme_ap_mode_failed_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0C030000)
-#define	wifi_evt_sme_ap_client_joined_id               	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0D030000)
-#define	wifi_evt_sme_ap_client_left_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0E030000)
-#define	wifi_evt_sme_scan_sort_result_id               	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0F030000)
-#define	wifi_evt_sme_scan_sort_finished_id             	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x10030000)
-#define	wifi_evt_sme_wps_stopped_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x11030000)
-#define	wifi_evt_sme_wps_completed_id                  	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x12030000)
-#define	wifi_evt_sme_wps_failed_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x13030000)
-#define	wifi_evt_sme_wps_credential_ssid_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x14030000)
-#define	wifi_evt_sme_wps_credential_password_id        	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x15030000)
-#define	wifi_evt_sme_signal_quality_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x16030000)
-#define	wifi_evt_tcpip_configuration_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00040000)
-#define	wifi_evt_tcpip_dns_configuration_id            	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01040000)
-#define	wifi_evt_tcpip_endpoint_status_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02040000)
-#define	wifi_evt_tcpip_dns_gethostbyname_result_id     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03040000)
-#define	wifi_evt_tcpip_udp_data_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x04040000)
-#define	wifi_evt_endpoint_syntax_error_id              	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00050000)
-#define	wifi_evt_endpoint_data_id                      	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01050000)
-#define	wifi_evt_endpoint_status_id                    	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02050000)
-#define	wifi_evt_endpoint_closing_id                   	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03050000)
-#define	wifi_evt_endpoint_error_id                     	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x04050000)
-#define	wifi_evt_hardware_soft_timer_id                	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00060000)
-#define	wifi_evt_hardware_change_notification_id       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01060000)
-#define	wifi_evt_hardware_external_interrupt_id        	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02060000)
-#define	wifi_evt_hardware_rtc_alarm_id                 	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03060000)
-#define	wifi_evt_flash_ps_key_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00070000)
-#define	wifi_evt_flash_ps_key_changed_id               	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01070000)
-#define	wifi_evt_https_on_req_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00090000)
-#define	wifi_evt_https_button_id                       	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01090000)
-#define	wifi_evt_ethernet_link_status_id               	(((uint32)wifi_dev_type_wifi)|wifi_msg_type_evt|0x000A0000)
+#define	wifi_cmd_dfu_reset_id                          	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00000000)
+#define	wifi_cmd_dfu_flash_set_address_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01000000)
+#define	wifi_cmd_dfu_flash_upload_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02000000)
+#define	wifi_cmd_dfu_flash_upload_finish_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03000000)
+#define	wifi_cmd_system_sync_id                        	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00010000)
+#define	wifi_cmd_system_reset_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01010000)
+#define	wifi_cmd_system_hello_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02010000)
+#define	wifi_cmd_system_set_max_power_saving_state_id  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03010000)
+#define	wifi_cmd_config_get_mac_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00020000)
+#define	wifi_cmd_config_set_mac_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01020000)
+#define	wifi_cmd_sme_wifi_on_id                        	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00030000)
+#define	wifi_cmd_sme_wifi_off_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01030000)
+#define	wifi_cmd_sme_power_on_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02030000)
+#define	wifi_cmd_sme_start_scan_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03030000)
+#define	wifi_cmd_sme_stop_scan_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04030000)
+#define	wifi_cmd_sme_set_password_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05030000)
+#define	wifi_cmd_sme_connect_bssid_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x06030000)
+#define	wifi_cmd_sme_connect_ssid_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x07030000)
+#define	wifi_cmd_sme_disconnect_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x08030000)
+#define	wifi_cmd_sme_set_scan_channels_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x09030000)
+#define	wifi_cmd_sme_set_operating_mode_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0A030000)
+#define	wifi_cmd_sme_start_ap_mode_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0B030000)
+#define	wifi_cmd_sme_stop_ap_mode_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0C030000)
+#define	wifi_cmd_sme_scan_results_sort_rssi_id         	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0D030000)
+#define	wifi_cmd_sme_ap_client_disconnect_id           	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0E030000)
+#define	wifi_cmd_sme_set_ap_password_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0F030000)
+#define	wifi_cmd_sme_set_ap_max_clients_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x10030000)
+#define	wifi_cmd_sme_start_wps_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x11030000)
+#define	wifi_cmd_sme_stop_wps_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x12030000)
+#define	wifi_cmd_sme_get_signal_quality_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x13030000)
+#define	wifi_cmd_tcpip_start_tcp_server_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00040000)
+#define	wifi_cmd_tcpip_tcp_connect_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01040000)
+#define	wifi_cmd_tcpip_start_udp_server_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02040000)
+#define	wifi_cmd_tcpip_udp_connect_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03040000)
+#define	wifi_cmd_tcpip_configure_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04040000)
+#define	wifi_cmd_tcpip_dns_configure_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05040000)
+#define	wifi_cmd_tcpip_dns_gethostbyname_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x06040000)
+#define	wifi_cmd_tcpip_udp_bind_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x07040000)
+#define	wifi_cmd_tcpip_dhcp_set_hostname_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x08040000)
+#define	wifi_cmd_endpoint_send_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00050000)
+#define	wifi_cmd_endpoint_set_streaming_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01050000)
+#define	wifi_cmd_endpoint_set_active_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02050000)
+#define	wifi_cmd_endpoint_set_streaming_destination_id 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03050000)
+#define	wifi_cmd_endpoint_close_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04050000)
+#define	wifi_cmd_endpoint_set_transmit_size_id         	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05050000)
+#define	wifi_cmd_hardware_set_soft_timer_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00060000)
+#define	wifi_cmd_hardware_external_interrupt_config_id 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01060000)
+#define	wifi_cmd_hardware_change_notification_config_id	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02060000)
+#define	wifi_cmd_hardware_change_notification_pullup_id	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03060000)
+#define	wifi_cmd_hardware_io_port_config_direction_id  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04060000)
+#define	wifi_cmd_hardware_io_port_config_open_drain_id 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05060000)
+#define	wifi_cmd_hardware_io_port_write_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x06060000)
+#define	wifi_cmd_hardware_io_port_read_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x07060000)
+#define	wifi_cmd_hardware_output_compare_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x08060000)
+#define	wifi_cmd_hardware_adc_read_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x09060000)
+#define	wifi_cmd_hardware_rtc_init_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0A060000)
+#define	wifi_cmd_hardware_rtc_set_time_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0B060000)
+#define	wifi_cmd_hardware_rtc_get_time_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0C060000)
+#define	wifi_cmd_hardware_rtc_set_alarm_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x0D060000)
+#define	wifi_cmd_flash_ps_defrag_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00070000)
+#define	wifi_cmd_flash_ps_dump_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01070000)
+#define	wifi_cmd_flash_ps_erase_all_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02070000)
+#define	wifi_cmd_flash_ps_save_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x03070000)
+#define	wifi_cmd_flash_ps_load_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x04070000)
+#define	wifi_cmd_flash_ps_erase_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x05070000)
+#define	wifi_cmd_i2c_start_read_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00080000)
+#define	wifi_cmd_i2c_start_write_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x01080000)
+#define	wifi_cmd_i2c_stop_id                           	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x02080000)
+#define	wifi_cmd_https_enable_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x00090000)
+#define	wifi_cmd_ethernet_set_dataroute_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x000A0000)
+#define	wifi_cmd_ethernet_close_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x010A0000)
+#define	wifi_cmd_ethernet_connected_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_cmd|0x020A0000)
+#define	wifi_rsp_dfu_reset_id                          	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00000000)
+#define	wifi_rsp_dfu_flash_set_address_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01000000)
+#define	wifi_rsp_dfu_flash_upload_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02000000)
+#define	wifi_rsp_dfu_flash_upload_finish_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03000000)
+#define	wifi_rsp_system_sync_id                        	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00010000)
+#define	wifi_rsp_system_reset_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01010000)
+#define	wifi_rsp_system_hello_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02010000)
+#define	wifi_rsp_system_set_max_power_saving_state_id  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03010000)
+#define	wifi_rsp_config_get_mac_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00020000)
+#define	wifi_rsp_config_set_mac_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01020000)
+#define	wifi_rsp_sme_wifi_on_id                        	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00030000)
+#define	wifi_rsp_sme_wifi_off_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01030000)
+#define	wifi_rsp_sme_power_on_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02030000)
+#define	wifi_rsp_sme_start_scan_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03030000)
+#define	wifi_rsp_sme_stop_scan_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04030000)
+#define	wifi_rsp_sme_set_password_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05030000)
+#define	wifi_rsp_sme_connect_bssid_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x06030000)
+#define	wifi_rsp_sme_connect_ssid_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x07030000)
+#define	wifi_rsp_sme_disconnect_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x08030000)
+#define	wifi_rsp_sme_set_scan_channels_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x09030000)
+#define	wifi_rsp_sme_set_operating_mode_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0A030000)
+#define	wifi_rsp_sme_start_ap_mode_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0B030000)
+#define	wifi_rsp_sme_stop_ap_mode_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0C030000)
+#define	wifi_rsp_sme_scan_results_sort_rssi_id         	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0D030000)
+#define	wifi_rsp_sme_ap_client_disconnect_id           	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0E030000)
+#define	wifi_rsp_sme_set_ap_password_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0F030000)
+#define	wifi_rsp_sme_set_ap_max_clients_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x10030000)
+#define	wifi_rsp_sme_start_wps_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x11030000)
+#define	wifi_rsp_sme_stop_wps_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x12030000)
+#define	wifi_rsp_sme_get_signal_quality_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x13030000)
+#define	wifi_rsp_tcpip_start_tcp_server_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00040000)
+#define	wifi_rsp_tcpip_tcp_connect_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01040000)
+#define	wifi_rsp_tcpip_start_udp_server_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02040000)
+#define	wifi_rsp_tcpip_udp_connect_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03040000)
+#define	wifi_rsp_tcpip_configure_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04040000)
+#define	wifi_rsp_tcpip_dns_configure_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05040000)
+#define	wifi_rsp_tcpip_dns_gethostbyname_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x06040000)
+#define	wifi_rsp_tcpip_udp_bind_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x07040000)
+#define	wifi_rsp_tcpip_dhcp_set_hostname_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x08040000)
+#define	wifi_rsp_endpoint_send_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00050000)
+#define	wifi_rsp_endpoint_set_streaming_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01050000)
+#define	wifi_rsp_endpoint_set_active_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02050000)
+#define	wifi_rsp_endpoint_set_streaming_destination_id 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03050000)
+#define	wifi_rsp_endpoint_close_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04050000)
+#define	wifi_rsp_endpoint_set_transmit_size_id         	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05050000)
+#define	wifi_rsp_hardware_set_soft_timer_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00060000)
+#define	wifi_rsp_hardware_external_interrupt_config_id 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01060000)
+#define	wifi_rsp_hardware_change_notification_config_id	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02060000)
+#define	wifi_rsp_hardware_change_notification_pullup_id	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03060000)
+#define	wifi_rsp_hardware_io_port_config_direction_id  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04060000)
+#define	wifi_rsp_hardware_io_port_config_open_drain_id 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05060000)
+#define	wifi_rsp_hardware_io_port_write_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x06060000)
+#define	wifi_rsp_hardware_io_port_read_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x07060000)
+#define	wifi_rsp_hardware_output_compare_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x08060000)
+#define	wifi_rsp_hardware_adc_read_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x09060000)
+#define	wifi_rsp_hardware_rtc_init_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0A060000)
+#define	wifi_rsp_hardware_rtc_set_time_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0B060000)
+#define	wifi_rsp_hardware_rtc_get_time_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0C060000)
+#define	wifi_rsp_hardware_rtc_set_alarm_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x0D060000)
+#define	wifi_rsp_flash_ps_defrag_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00070000)
+#define	wifi_rsp_flash_ps_dump_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01070000)
+#define	wifi_rsp_flash_ps_erase_all_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02070000)
+#define	wifi_rsp_flash_ps_save_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x03070000)
+#define	wifi_rsp_flash_ps_load_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x04070000)
+#define	wifi_rsp_flash_ps_erase_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x05070000)
+#define	wifi_rsp_i2c_start_read_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00080000)
+#define	wifi_rsp_i2c_start_write_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x01080000)
+#define	wifi_rsp_i2c_stop_id                           	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x02080000)
+#define	wifi_rsp_https_enable_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x00090000)
+#define	wifi_rsp_ethernet_set_dataroute_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x000A0000)
+#define	wifi_rsp_ethernet_close_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x010A0000)
+#define	wifi_rsp_ethernet_connected_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_rsp|0x020A0000)
+#define	wifi_evt_dfu_boot_id                           	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00000000)
+#define	wifi_evt_system_boot_id                        	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00010000)
+#define	wifi_evt_system_state_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01010000)
+#define	wifi_evt_system_sw_exception_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02010000)
+#define	wifi_evt_system_power_saving_state_id          	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03010000)
+#define	wifi_evt_config_mac_address_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00020000)
+#define	wifi_evt_sme_wifi_is_on_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00030000)
+#define	wifi_evt_sme_wifi_is_off_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01030000)
+#define	wifi_evt_sme_scan_result_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02030000)
+#define	wifi_evt_sme_scan_result_drop_id               	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03030000)
+#define	wifi_evt_sme_scanned_id                        	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x04030000)
+#define	wifi_evt_sme_connected_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x05030000)
+#define	wifi_evt_sme_disconnected_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x06030000)
+#define	wifi_evt_sme_interface_status_id               	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x07030000)
+#define	wifi_evt_sme_connect_failed_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x08030000)
+#define	wifi_evt_sme_connect_retry_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x09030000)
+#define	wifi_evt_sme_ap_mode_started_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0A030000)
+#define	wifi_evt_sme_ap_mode_stopped_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0B030000)
+#define	wifi_evt_sme_ap_mode_failed_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0C030000)
+#define	wifi_evt_sme_ap_client_joined_id               	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0D030000)
+#define	wifi_evt_sme_ap_client_left_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0E030000)
+#define	wifi_evt_sme_scan_sort_result_id               	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x0F030000)
+#define	wifi_evt_sme_scan_sort_finished_id             	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x10030000)
+#define	wifi_evt_sme_wps_stopped_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x11030000)
+#define	wifi_evt_sme_wps_completed_id                  	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x12030000)
+#define	wifi_evt_sme_wps_failed_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x13030000)
+#define	wifi_evt_sme_wps_credential_ssid_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x14030000)
+#define	wifi_evt_sme_wps_credential_password_id        	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x15030000)
+#define	wifi_evt_sme_signal_quality_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x16030000)
+#define	wifi_evt_tcpip_configuration_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00040000)
+#define	wifi_evt_tcpip_dns_configuration_id            	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01040000)
+#define	wifi_evt_tcpip_endpoint_status_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02040000)
+#define	wifi_evt_tcpip_dns_gethostbyname_result_id     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03040000)
+#define	wifi_evt_tcpip_udp_data_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x04040000)
+#define	wifi_evt_endpoint_syntax_error_id              	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00050000)
+#define	wifi_evt_endpoint_data_id                      	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01050000)
+#define	wifi_evt_endpoint_status_id                    	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02050000)
+#define	wifi_evt_endpoint_closing_id                   	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03050000)
+#define	wifi_evt_endpoint_error_id                     	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x04050000)
+#define	wifi_evt_hardware_soft_timer_id                	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00060000)
+#define	wifi_evt_hardware_change_notification_id       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01060000)
+#define	wifi_evt_hardware_external_interrupt_id        	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x02060000)
+#define	wifi_evt_hardware_rtc_alarm_id                 	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x03060000)
+#define	wifi_evt_flash_ps_key_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00070000)
+#define	wifi_evt_flash_ps_key_changed_id               	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01070000)
+#define	wifi_evt_https_on_req_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x00090000)
+#define	wifi_evt_https_button_id                       	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x01090000)
+#define	wifi_evt_ethernet_link_status_id               	(((uint32_t)wifi_dev_type_wifi)|wifi_msg_type_evt|0x000A0000)
 #ifndef BG_ERRORCODES
 #define BG_ERRORCODES
 enum wifi_error_spaces
@@ -456,17 +456,17 @@ typedef enum wifi_error
 
 __packed struct wifi_msg_dfu_reset_cmd_t 
 { 
-    uint8	dfu;
+    uint8_t	dfu;
 };
 
 __packed struct wifi_msg_dfu_flash_set_address_cmd_t
 {
-	uint32	address;
+	uint32_t	address;
 };
 
 __packed struct wifi_msg_dfu_flash_set_address_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_dfu_flash_upload_cmd_t
@@ -476,124 +476,124 @@ __packed struct wifi_msg_dfu_flash_upload_cmd_t
 
 __packed struct wifi_msg_dfu_flash_upload_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_dfu_flash_upload_finish_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_dfu_boot_evt_t
 {
-	uint32	version;
+	uint32_t	version;
 };
 
 __packed struct wifi_msg_system_reset_cmd_t
 {
-	uint8	dfu;
+	uint8_t	dfu;
 };
 
 __packed struct wifi_msg_system_set_max_power_saving_state_cmd_t
 {
-	uint8	state;
+	uint8_t	state;
 };
 
 __packed struct wifi_msg_system_set_max_power_saving_state_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_system_boot_evt_t
 {
-	uint16	major;
-	uint16	minor;
-	uint16	patch;
-	uint16	build;
-	uint16	bootloader_version;
-	uint16	tcpip_version;
-	uint16	hw;
+	uint16_t	major;
+	uint16_t	minor;
+	uint16_t	patch;
+	uint16_t	build;
+	uint16_t	bootloader_version;
+	uint16_t	tcpip_version;
+	uint16_t	hw;
 };
 
 __packed struct wifi_msg_system_state_evt_t
 {
-	uint16	state;
+	uint16_t	state;
 };
 
 __packed struct wifi_msg_system_sw_exception_evt_t
 {
-	uint32	address;
-	uint8	type;
+	uint32_t	address;
+	uint8_t	type;
 };
 
 __packed struct wifi_msg_system_power_saving_state_evt_t
 {
-	uint8	state;
+	uint8_t	state;
 };
 
 __packed struct wifi_msg_config_get_mac_cmd_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_config_get_mac_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_config_set_mac_cmd_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 	hw_addr	mac;
 };
 
 __packed struct wifi_msg_config_set_mac_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_config_mac_address_evt_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 	hw_addr	mac;
 };
 
 __packed struct wifi_msg_sme_wifi_on_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_wifi_off_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_power_on_cmd_t
 {
-	uint8	enable;
+	uint8_t	enable;
 };
 
 __packed struct wifi_msg_sme_power_on_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_start_scan_cmd_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 	uint8array	chList;
 };
 
 __packed struct wifi_msg_sme_start_scan_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_stop_scan_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_set_password_cmd_t
@@ -603,7 +603,7 @@ __packed struct wifi_msg_sme_set_password_cmd_t
 
 __packed struct wifi_msg_sme_set_password_rsp_t
 {
-	uint8	status;
+	uint8_t	status;
 };
 
 __packed struct wifi_msg_sme_connect_bssid_cmd_t
@@ -613,8 +613,8 @@ __packed struct wifi_msg_sme_connect_bssid_cmd_t
 
 __packed struct wifi_msg_sme_connect_bssid_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 	hw_addr	bssid;
 };
 
@@ -625,65 +625,65 @@ __packed struct wifi_msg_sme_connect_ssid_cmd_t
 
 __packed struct wifi_msg_sme_connect_ssid_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 	hw_addr	bssid;
 };
 
 __packed struct wifi_msg_sme_disconnect_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_set_scan_channels_cmd_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 	uint8array	chList;
 };
 
 __packed struct wifi_msg_sme_set_scan_channels_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_set_operating_mode_cmd_t
 {
-	uint8	mode;
+	uint8_t	mode;
 };
 
 __packed struct wifi_msg_sme_set_operating_mode_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_start_ap_mode_cmd_t
 {
-	uint8	channel;
-	uint8	security;
+	uint8_t	channel;
+	uint8_t	security;
 	uint8array	ssid;
 };
 
 __packed struct wifi_msg_sme_start_ap_mode_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_stop_ap_mode_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_scan_results_sort_rssi_cmd_t
 {
-	uint8	amount;
+	uint8_t	amount;
 };
 
 __packed struct wifi_msg_sme_scan_results_sort_rssi_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_ap_client_disconnect_cmd_t
@@ -693,8 +693,8 @@ __packed struct wifi_msg_sme_ap_client_disconnect_cmd_t
 
 __packed struct wifi_msg_sme_ap_client_disconnect_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_set_ap_password_cmd_t
@@ -704,55 +704,55 @@ __packed struct wifi_msg_sme_set_ap_password_cmd_t
 
 __packed struct wifi_msg_sme_set_ap_password_rsp_t
 {
-	uint8	status;
+	uint8_t	status;
 };
 
 __packed struct wifi_msg_sme_set_ap_max_clients_cmd_t
 {
-	uint8	max_clients;
+	uint8_t	max_clients;
 };
 
 __packed struct wifi_msg_sme_set_ap_max_clients_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_start_wps_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_stop_wps_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_get_signal_quality_rsp_t
 {
-	uint16	result;
-	uint8	hw_interface;
+	uint16_t	result;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_wifi_is_on_evt_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_wifi_is_off_evt_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_sme_scan_result_evt_t
 {
 	hw_addr	bssid;
-	int8	channel;
-	int16	rssi;
-	int8	snr;
-	uint8	secure;
+	int8_t	channel;
+	int16_t	rssi;
+	int8_t	snr;
+	uint8_t	secure;
 	uint8array	ssid;
 };
 
@@ -763,159 +763,159 @@ __packed struct wifi_msg_sme_scan_result_drop_evt_t
 
 __packed struct wifi_msg_sme_scanned_evt_t
 {
-	int8	status;
+	int8_t	status;
 };
 
 __packed struct wifi_msg_sme_connected_evt_t
 {
-	int8	status;
-	uint8	hw_interface;
+	int8_t	status;
+	uint8_t	hw_interface;
 	hw_addr	bssid;
 };
 
 __packed struct wifi_msg_sme_disconnected_evt_t
 {
-	uint16	reason;
-	uint8	hw_interface;
+	uint16_t	reason;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_interface_status_evt_t
 {
-	uint8	hw_interface;
-	uint8	status;
+	uint8_t	hw_interface;
+	uint8_t	status;
 };
 
 __packed struct wifi_msg_sme_connect_failed_evt_t
 {
-	uint16	reason;
-	uint8	hw_interface;
+	uint16_t	reason;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_connect_retry_evt_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_ap_mode_started_evt_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_ap_mode_stopped_evt_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_ap_mode_failed_evt_t
 {
-	uint16	reason;
-	uint8	hw_interface;
+	uint16_t	reason;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_ap_client_joined_evt_t
 {
 	hw_addr	mac_address;
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_ap_client_left_evt_t
 {
 	hw_addr	mac_address;
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_scan_sort_result_evt_t
 {
 	hw_addr	bssid;
-	int8	channel;
-	int16	rssi;
-	int8	snr;
-	uint8	secure;
+	int8_t	channel;
+	int16_t	rssi;
+	int8_t	snr;
+	uint8_t	secure;
 	uint8array	ssid;
 };
 
 __packed struct wifi_msg_sme_wps_stopped_evt_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_wps_completed_evt_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_wps_failed_evt_t
 {
-	uint16	reason;
-	uint8	hw_interface;
+	uint16_t	reason;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_sme_wps_credential_ssid_evt_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 	uint8array	ssid;
 };
 
 __packed struct wifi_msg_sme_wps_credential_password_evt_t
 {
-	uint8	hw_interface;
+	uint8_t	hw_interface;
 	uint8array	password;
 };
 
 __packed struct wifi_msg_sme_signal_quality_evt_t
 {
-	int8	rssi;
-	uint8	hw_interface;
+	int8_t	rssi;
+	uint8_t	hw_interface;
 };
 
 __packed struct wifi_msg_tcpip_start_tcp_server_cmd_t
 {
-	uint16	port;
-	int8	default_destination;
+	uint16_t	port;
+	int8_t	default_destination;
 };
 
 __packed struct wifi_msg_tcpip_start_tcp_server_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_tcpip_tcp_connect_cmd_t
 {
 	ipv4	address;
-	uint16	port;
-	int8	routing;
+	uint16_t	port;
+	int8_t	routing;
 };
 
 __packed struct wifi_msg_tcpip_tcp_connect_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_tcpip_start_udp_server_cmd_t
 {
-	uint16	port;
-	int8	default_destination;
+	uint16_t	port;
+	int8_t	default_destination;
 };
 
 __packed struct wifi_msg_tcpip_start_udp_server_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_tcpip_udp_connect_cmd_t
 {
 	ipv4	address;
-	uint16	port;
-	int8	routing;
+	uint16_t	port;
+	int8_t	routing;
 };
 
 __packed struct wifi_msg_tcpip_udp_connect_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_tcpip_configure_cmd_t
@@ -923,23 +923,23 @@ __packed struct wifi_msg_tcpip_configure_cmd_t
 	ipv4	address;
 	ipv4	netmask;
 	ipv4	gateway;
-	uint8	use_dhcp;
+	uint8_t	use_dhcp;
 };
 
 __packed struct wifi_msg_tcpip_configure_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_tcpip_dns_configure_cmd_t
 {
-	uint8	index;
+	uint8_t	index;
 	ipv4	address;
 };
 
 __packed struct wifi_msg_tcpip_dns_configure_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_tcpip_dns_gethostbyname_cmd_t
@@ -949,18 +949,18 @@ __packed struct wifi_msg_tcpip_dns_gethostbyname_cmd_t
 
 __packed struct wifi_msg_tcpip_dns_gethostbyname_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_tcpip_udp_bind_cmd_t
 {
-	uint8	endpoint;
-	uint16	port;
+	uint8_t	endpoint;
+	uint16_t	port;
 };
 
 __packed struct wifi_msg_tcpip_udp_bind_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_tcpip_dhcp_set_hostname_cmd_t
@@ -970,7 +970,7 @@ __packed struct wifi_msg_tcpip_dhcp_set_hostname_cmd_t
 
 __packed struct wifi_msg_tcpip_dhcp_set_hostname_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_tcpip_configuration_evt_t
@@ -978,475 +978,475 @@ __packed struct wifi_msg_tcpip_configuration_evt_t
 	ipv4	address;
 	ipv4	netmask;
 	ipv4	gateway;
-	uint8	use_dhcp;
+	uint8_t	use_dhcp;
 };
 
 __packed struct wifi_msg_tcpip_dns_configuration_evt_t
 {
-	uint8	index;
+	uint8_t	index;
 	ipv4	address;
 };
 
 __packed struct wifi_msg_tcpip_endpoint_status_evt_t
 {
-	uint8	endpoint;
+	uint8_t	endpoint;
 	ipv4	local_ip;
-	uint16	local_port;
+	uint16_t	local_port;
 	ipv4	remote_ip;
-	uint16	remote_port;
+	uint16_t	remote_port;
 };
 
 __packed struct wifi_msg_tcpip_dns_gethostbyname_result_evt_t
 {
-	uint16	result;
+	uint16_t	result;
 	ipv4	address;
 	uint8array	name;
 };
 
 __packed struct wifi_msg_tcpip_udp_data_evt_t
 {
-	uint8	endpoint;
+	uint8_t	endpoint;
 	ipv4	source_address;
-	uint16	source_port;
+	uint16_t	source_port;
 	uint16array	data;
 };
 
 __packed struct wifi_msg_endpoint_send_cmd_t
 {
-	uint8	endpoint;
+	uint8_t	endpoint;
 	uint8array	data;
 };
 
 __packed struct wifi_msg_endpoint_send_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_endpoint_set_streaming_cmd_t
 {
-	uint8	endpoint;
-	uint8	streaming;
+	uint8_t	endpoint;
+	uint8_t	streaming;
 };
 
 __packed struct wifi_msg_endpoint_set_streaming_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_endpoint_set_active_cmd_t
 {
-	uint8	endpoint;
-	uint8	active;
+	uint8_t	endpoint;
+	uint8_t	active;
 };
 
 __packed struct wifi_msg_endpoint_set_active_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_endpoint_set_streaming_destination_cmd_t
 {
-	uint8	endpoint;
-	int8	streaming_destination;
+	uint8_t	endpoint;
+	int8_t	streaming_destination;
 };
 
 __packed struct wifi_msg_endpoint_set_streaming_destination_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_endpoint_close_cmd_t
 {
-	uint8	endpoint;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_endpoint_close_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_endpoint_set_transmit_size_cmd_t
 {
-	uint8	endpoint;
-	uint16	size;
+	uint8_t	endpoint;
+	uint16_t	size;
 };
 
 __packed struct wifi_msg_endpoint_set_transmit_size_rsp_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_endpoint_syntax_error_evt_t
 {
-	uint16	result;
-	uint8	endpoint;
+	uint16_t	result;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_endpoint_data_evt_t
 {
-	uint8	endpoint;
+	uint8_t	endpoint;
 	uint8array	data;
 };
 
 __packed struct wifi_msg_endpoint_status_evt_t
 {
-	uint8	endpoint;
-	uint32	type;
-	uint8	streaming;
-	int8	destination;
-	uint8	active;
+	uint8_t	endpoint;
+	uint32_t	type;
+	uint8_t	streaming;
+	int8_t	destination;
+	uint8_t	active;
 };
 
 __packed struct wifi_msg_endpoint_closing_evt_t
 {
-	uint16	reason;
-	uint8	endpoint;
+	uint16_t	reason;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_endpoint_error_evt_t
 {
-	uint16	reason;
-	uint8	endpoint;
+	uint16_t	reason;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_hardware_set_soft_timer_cmd_t
 {
-	uint32	time;
-	uint8	handle;
-	uint8	single_shot;
+	uint32_t	time;
+	uint8_t	handle;
+	uint8_t	single_shot;
 };
 
 __packed struct wifi_msg_hardware_set_soft_timer_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_external_interrupt_config_cmd_t
 {
-	uint8	enable;
-	uint8	polarity;
+	uint8_t	enable;
+	uint8_t	polarity;
 };
 
 __packed struct wifi_msg_hardware_external_interrupt_config_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_change_notification_config_cmd_t
 {
-	uint32	enable;
+	uint32_t	enable;
 };
 
 __packed struct wifi_msg_hardware_change_notification_config_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_change_notification_pullup_cmd_t
 {
-	uint32	pullup;
+	uint32_t	pullup;
 };
 
 __packed struct wifi_msg_hardware_change_notification_pullup_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_io_port_config_direction_cmd_t
 {
-	uint8	port;
-	uint16	mask;
-	uint16	direction;
+	uint8_t	port;
+	uint16_t	mask;
+	uint16_t	direction;
 };
 
 __packed struct wifi_msg_hardware_io_port_config_direction_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_io_port_config_open_drain_cmd_t
 {
-	uint8	port;
-	uint16	mask;
-	uint16	open_drain;
+	uint8_t	port;
+	uint16_t	mask;
+	uint16_t	open_drain;
 };
 
 __packed struct wifi_msg_hardware_io_port_config_open_drain_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_io_port_write_cmd_t
 {
-	uint8	port;
-	uint16	mask;
-	uint16	data;
+	uint8_t	port;
+	uint16_t	mask;
+	uint16_t	data;
 };
 
 __packed struct wifi_msg_hardware_io_port_write_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_io_port_read_cmd_t
 {
-	uint8	port;
-	uint16	mask;
+	uint8_t	port;
+	uint16_t	mask;
 };
 
 __packed struct wifi_msg_hardware_io_port_read_rsp_t
 {
-	uint16	result;
-	uint8	port;
-	uint16	data;
+	uint16_t	result;
+	uint8_t	port;
+	uint16_t	data;
 };
 
 __packed struct wifi_msg_hardware_output_compare_cmd_t
 {
-	uint8	index;
-	uint8	bit32;
-	uint8	timer;
-	uint8	mode;
-	uint32	compare_value;
+	uint8_t	index;
+	uint8_t	bit32;
+	uint8_t	timer;
+	uint8_t	mode;
+	uint32_t	compare_value;
 };
 
 __packed struct wifi_msg_hardware_output_compare_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_adc_read_cmd_t
 {
-	uint8	input;
+	uint8_t	input;
 };
 
 __packed struct wifi_msg_hardware_adc_read_rsp_t
 {
-	uint16	result;
-	uint8	input;
-	uint16	value;
+	uint16_t	result;
+	uint8_t	input;
+	uint16_t	value;
 };
 
 __packed struct wifi_msg_hardware_rtc_init_cmd_t
 {
-	uint8	enable;
-	int16	drift;
+	uint8_t	enable;
+	int16_t	drift;
 };
 
 __packed struct wifi_msg_hardware_rtc_init_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_rtc_set_time_cmd_t
 {
-	int16	year;
-	int8	month;
-	int8	day;
-	int8	weekday;
-	int8	hour;
-	int8	minute;
-	int8	second;
+	int16_t	year;
+	int8_t	month;
+	int8_t	day;
+	int8_t	weekday;
+	int8_t	hour;
+	int8_t	minute;
+	int8_t	second;
 };
 
 __packed struct wifi_msg_hardware_rtc_set_time_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_rtc_get_time_rsp_t
 {
-	uint16	result;
-	int16	year;
-	int8	month;
-	int8	day;
-	int8	weekday;
-	int8	hour;
-	int8	minute;
-	int8	second;
+	uint16_t	result;
+	int16_t	year;
+	int8_t	month;
+	int8_t	day;
+	int8_t	weekday;
+	int8_t	hour;
+	int8_t	minute;
+	int8_t	second;
 };
 
 __packed struct wifi_msg_hardware_rtc_set_alarm_cmd_t
 {
-	uint8	month;
-	uint8	day;
-	int8	weekday;
-	uint8	hour;
-	uint8	minute;
-	uint8	second;
-	uint8	repeat_mask;
-	int16	repeat_count;
+	uint8_t	month;
+	uint8_t	day;
+	int8_t	weekday;
+	uint8_t	hour;
+	uint8_t	minute;
+	uint8_t	second;
+	uint8_t	repeat_mask;
+	int16_t	repeat_count;
 };
 
 __packed struct wifi_msg_hardware_rtc_set_alarm_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_hardware_soft_timer_evt_t
 {
-	uint8	handle;
+	uint8_t	handle;
 };
 
 __packed struct wifi_msg_hardware_change_notification_evt_t
 {
-	uint32	timestamp;
+	uint32_t	timestamp;
 };
 
 __packed struct wifi_msg_hardware_external_interrupt_evt_t
 {
-	uint8	irq;
-	uint32	timestamp;
+	uint8_t	irq;
+	uint32_t	timestamp;
 };
 
 __packed struct wifi_msg_flash_ps_defrag_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_flash_ps_dump_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_flash_ps_erase_all_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_flash_ps_save_cmd_t
 {
-	uint16	key;
+	uint16_t	key;
 	uint8array	value;
 };
 
 __packed struct wifi_msg_flash_ps_save_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_flash_ps_load_cmd_t
 {
-	uint16	key;
+	uint16_t	key;
 };
 
 __packed struct wifi_msg_flash_ps_load_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 	uint8array	value;
 };
 
 __packed struct wifi_msg_flash_ps_erase_cmd_t
 {
-	uint16	key;
+	uint16_t	key;
 };
 
 __packed struct wifi_msg_flash_ps_erase_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_flash_ps_key_evt_t
 {
-	uint16	key;
+	uint16_t	key;
 	uint8array	value;
 };
 
 __packed struct wifi_msg_flash_ps_key_changed_evt_t
 {
-	uint16	key;
+	uint16_t	key;
 };
 
 __packed struct wifi_msg_i2c_start_read_cmd_t
 {
-	uint8	endpoint;
-	uint16	slave_address;
-	uint8	length;
+	uint8_t	endpoint;
+	uint16_t	slave_address;
+	uint8_t	length;
 };
 
 __packed struct wifi_msg_i2c_start_read_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_i2c_start_write_cmd_t
 {
-	uint8	endpoint;
-	uint16	slave_address;
+	uint8_t	endpoint;
+	uint16_t	slave_address;
 };
 
 __packed struct wifi_msg_i2c_start_write_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_i2c_stop_cmd_t
 {
-	uint8	endpoint;
+	uint8_t	endpoint;
 };
 
 __packed struct wifi_msg_i2c_stop_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_https_enable_cmd_t
 {
-	uint8	https;
-	uint8	dhcps;
-	uint8	dnss;
+	uint8_t	https;
+	uint8_t	dhcps;
+	uint8_t	dnss;
 };
 
 __packed struct wifi_msg_https_enable_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_https_on_req_evt_t
 {
-	uint8	service;
+	uint8_t	service;
 };
 
 __packed struct wifi_msg_https_button_evt_t
 {
-	uint8	number;
+	uint8_t	number;
 };
 
 __packed struct wifi_msg_ethernet_set_dataroute_cmd_t
 {
-	uint8	route;
+	uint8_t	route;
 };
 
 __packed struct wifi_msg_ethernet_set_dataroute_rsp_t
 {
-	uint16	result;
+	uint16_t	result;
 };
 
 __packed struct wifi_msg_ethernet_connected_rsp_t
 {
-	uint8	state;
+	uint8_t	state;
 };
 
 __packed struct wifi_msg_ethernet_link_status_evt_t
 {
-	uint8	state;
+	uint8_t	state;
 };
 
 __packed 
 struct wifi_cmd_packet
 {
-	uint32   header;
+	uint32_t   header;
 
 union{
-	uint8 handle;
+	uint8_t handle;
 
-	uint8 payload;
+	uint8_t payload;
 
 	struct wifi_msg_dfu_reset_cmd_t                           cmd_dfu_reset;
 	struct wifi_msg_dfu_flash_set_address_cmd_t               cmd_dfu_flash_set_address;
@@ -1629,144 +1629,144 @@ extern struct wifi_cmd_packet bglib_temp_msg;
 #define wifi_cmd_dfu_reset(DFU) \
 {\
 bglib_temp_msg.cmd_dfu_reset.dfu=DFU;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x0<<16)|((uint32)0x0<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x0<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**This command set address on the flash memory for writing data.**/
 #define wifi_cmd_dfu_flash_set_address(ADDRESS) \
 {\
 bglib_temp_msg.cmd_dfu_flash_set_address.address=ADDRESS;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)4+0)>>8)))|((((uint32)4+0)&0xff)<<8)|((uint32)0x0<<16)|((uint32)0x1<<24);\
-bglib_output (4+4,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)4+0)>>8)))|((((uint32_t)4+0)&0xff)<<8)|((uint32_t)0x0<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+4,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Upload binary for flashing. Address will be updated automatically.**/
 #define wifi_cmd_dfu_flash_upload(DATA_LEN,DATA_DATA) \
 {\
 bglib_temp_msg.cmd_dfu_flash_upload.data.len=DATA_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+bglib_temp_msg.cmd_dfu_flash_upload.data.len)>>8)))|((((uint32)1+bglib_temp_msg.cmd_dfu_flash_upload.data.len)&0xff)<<8)|((uint32)0x0<<16)|((uint32)0x2<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_dfu_flash_upload.data.len,(uint8*)DATA_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+bglib_temp_msg.cmd_dfu_flash_upload.data.len)>>8)))|((((uint32_t)1+bglib_temp_msg.cmd_dfu_flash_upload.data.len)&0xff)<<8)|((uint32_t)0x0<<16)|((uint32_t)0x2<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_dfu_flash_upload.data.len,(uint8_t*)DATA_DATA);\
 }
 /**Uploading is finished.**/
 #define wifi_cmd_dfu_flash_upload_finish() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x0<<16)|((uint32)0x3<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x0<<16)|((uint32_t)0x3<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Sync system state**/
 #define wifi_cmd_system_sync() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x1<<16)|((uint32)0x0<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x1<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Reset system**/
 #define wifi_cmd_system_reset(DFU) \
 {\
 bglib_temp_msg.cmd_system_reset.dfu=DFU;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x1<<16)|((uint32)0x1<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x1<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Hello (no-op)**/
 #define wifi_cmd_system_hello() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x1<<16)|((uint32)0x2<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x1<<16)|((uint32_t)0x2<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**set maximum state for power saving**/
 #define wifi_cmd_system_set_max_power_saving_state(STATE) \
 {\
 bglib_temp_msg.cmd_system_set_max_power_saving_state.state=STATE;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x1<<16)|((uint32)0x3<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x1<<16)|((uint32_t)0x3<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Get MAC address**/
 #define wifi_cmd_config_get_mac(HW_INTERFACE) \
 {\
 bglib_temp_msg.cmd_config_get_mac.hw_interface=HW_INTERFACE;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x2<<16)|((uint32)0x0<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x2<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set MAC address**/
 #define wifi_cmd_config_set_mac(HW_INTERFACE,MAC) \
 {\
 bglib_temp_msg.cmd_config_set_mac.hw_interface=HW_INTERFACE;\
 memcpy(&bglib_temp_msg.cmd_config_set_mac.mac,MAC,sizeof(hw_addr));\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)7+0)>>8)))|((((uint32)7+0)&0xff)<<8)|((uint32)0x2<<16)|((uint32)0x1<<24);\
-bglib_output (4+7,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)7+0)>>8)))|((((uint32_t)7+0)&0xff)<<8)|((uint32_t)0x2<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+7,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Turn Wi-Fi on**/
 #define wifi_cmd_sme_wifi_on() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x0<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Turn wifi off**/
 #define wifi_cmd_sme_wifi_off() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x1<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Turn on or off the power to the Wi-Fi chip**/
 #define wifi_cmd_sme_power_on(ENABLE) \
 {\
 bglib_temp_msg.cmd_sme_power_on.enable=ENABLE;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x2<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x2<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Initiate the scan procedure**/
 #define wifi_cmd_sme_start_scan(HW_INTERFACE,CHLIST_LEN,CHLIST_DATA) \
 {\
 bglib_temp_msg.cmd_sme_start_scan.hw_interface=HW_INTERFACE;\
 bglib_temp_msg.cmd_sme_start_scan.chList.len=CHLIST_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)2+bglib_temp_msg.cmd_sme_start_scan.chList.len)>>8)))|((((uint32)2+bglib_temp_msg.cmd_sme_start_scan.chList.len)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x3<<24);\
-bglib_output (4+2,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_start_scan.chList.len,(uint8*)CHLIST_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)2+bglib_temp_msg.cmd_sme_start_scan.chList.len)>>8)))|((((uint32_t)2+bglib_temp_msg.cmd_sme_start_scan.chList.len)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x3<<24);\
+bglib_output (4+2,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_start_scan.chList.len,(uint8_t*)CHLIST_DATA);\
 }
 /**Terminate the scan procedure**/
 #define wifi_cmd_sme_stop_scan() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x4<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x4<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set the Wi-Fi password**/
 #define wifi_cmd_sme_set_password(PASSWORD_LEN,PASSWORD_DATA) \
 {\
 bglib_temp_msg.cmd_sme_set_password.password.len=PASSWORD_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+bglib_temp_msg.cmd_sme_set_password.password.len)>>8)))|((((uint32)1+bglib_temp_msg.cmd_sme_set_password.password.len)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x5<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_set_password.password.len,(uint8*)PASSWORD_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+bglib_temp_msg.cmd_sme_set_password.password.len)>>8)))|((((uint32_t)1+bglib_temp_msg.cmd_sme_set_password.password.len)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x5<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_set_password.password.len,(uint8_t*)PASSWORD_DATA);\
 }
 /**Connect to a specific Access Point using its unique BSSID**/
 #define wifi_cmd_sme_connect_bssid(BSSID) \
 {\
 memcpy(&bglib_temp_msg.cmd_sme_connect_bssid.bssid,BSSID,sizeof(hw_addr));\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)6+0)>>8)))|((((uint32)6+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x6<<24);\
-bglib_output (4+6,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)6+0)>>8)))|((((uint32_t)6+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x6<<24);\
+bglib_output (4+6,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Connect to an Access Point which belongs to the network identified with the given SSID**/
 #define wifi_cmd_sme_connect_ssid(SSID_LEN,SSID_DATA) \
 {\
 bglib_temp_msg.cmd_sme_connect_ssid.ssid.len=SSID_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+bglib_temp_msg.cmd_sme_connect_ssid.ssid.len)>>8)))|((((uint32)1+bglib_temp_msg.cmd_sme_connect_ssid.ssid.len)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x7<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_connect_ssid.ssid.len,(uint8*)SSID_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+bglib_temp_msg.cmd_sme_connect_ssid.ssid.len)>>8)))|((((uint32_t)1+bglib_temp_msg.cmd_sme_connect_ssid.ssid.len)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x7<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_connect_ssid.ssid.len,(uint8_t*)SSID_DATA);\
 }
 /**Disconnect from the Access Point**/
 #define wifi_cmd_sme_disconnect() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x8<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x8<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set default scan channel list**/
 #define wifi_cmd_sme_set_scan_channels(HW_INTERFACE,CHLIST_LEN,CHLIST_DATA) \
 {\
 bglib_temp_msg.cmd_sme_set_scan_channels.hw_interface=HW_INTERFACE;\
 bglib_temp_msg.cmd_sme_set_scan_channels.chList.len=CHLIST_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)2+bglib_temp_msg.cmd_sme_set_scan_channels.chList.len)>>8)))|((((uint32)2+bglib_temp_msg.cmd_sme_set_scan_channels.chList.len)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x9<<24);\
-bglib_output (4+2,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_set_scan_channels.chList.len,(uint8*)CHLIST_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)2+bglib_temp_msg.cmd_sme_set_scan_channels.chList.len)>>8)))|((((uint32_t)2+bglib_temp_msg.cmd_sme_set_scan_channels.chList.len)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x9<<24);\
+bglib_output (4+2,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_set_scan_channels.chList.len,(uint8_t*)CHLIST_DATA);\
 }
 /**Set Wi-Fi operating mode**/
 #define wifi_cmd_sme_set_operating_mode(MODE) \
 {\
 bglib_temp_msg.cmd_sme_set_operating_mode.mode=MODE;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0xa<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0xa<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Start Access Point mode**/
 #define wifi_cmd_sme_start_ap_mode(CHANNEL,SECURITY,SSID_LEN,SSID_DATA) \
@@ -1774,68 +1774,68 @@ bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
 bglib_temp_msg.cmd_sme_start_ap_mode.channel=CHANNEL;\
 bglib_temp_msg.cmd_sme_start_ap_mode.security=SECURITY;\
 bglib_temp_msg.cmd_sme_start_ap_mode.ssid.len=SSID_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+bglib_temp_msg.cmd_sme_start_ap_mode.ssid.len)>>8)))|((((uint32)3+bglib_temp_msg.cmd_sme_start_ap_mode.ssid.len)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0xb<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_start_ap_mode.ssid.len,(uint8*)SSID_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+bglib_temp_msg.cmd_sme_start_ap_mode.ssid.len)>>8)))|((((uint32_t)3+bglib_temp_msg.cmd_sme_start_ap_mode.ssid.len)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0xb<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_start_ap_mode.ssid.len,(uint8_t*)SSID_DATA);\
 }
 /**Stop Access Point mode**/
 #define wifi_cmd_sme_stop_ap_mode() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0xc<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0xc<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**resend scan results, sorted by rssi**/
 #define wifi_cmd_sme_scan_results_sort_rssi(AMOUNT) \
 {\
 bglib_temp_msg.cmd_sme_scan_results_sort_rssi.amount=AMOUNT;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0xd<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0xd<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Disconnect a station from the network.**/
 #define wifi_cmd_sme_ap_client_disconnect(MAC_ADDRESS) \
 {\
 memcpy(&bglib_temp_msg.cmd_sme_ap_client_disconnect.mac_address,MAC_ADDRESS,sizeof(hw_addr));\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)6+0)>>8)))|((((uint32)6+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0xe<<24);\
-bglib_output (4+6,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)6+0)>>8)))|((((uint32_t)6+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0xe<<24);\
+bglib_output (4+6,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set the Wi-Fi password for Access Point**/
 #define wifi_cmd_sme_set_ap_password(PASSWORD_LEN,PASSWORD_DATA) \
 {\
 bglib_temp_msg.cmd_sme_set_ap_password.password.len=PASSWORD_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+bglib_temp_msg.cmd_sme_set_ap_password.password.len)>>8)))|((((uint32)1+bglib_temp_msg.cmd_sme_set_ap_password.password.len)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0xf<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_set_ap_password.password.len,(uint8*)PASSWORD_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+bglib_temp_msg.cmd_sme_set_ap_password.password.len)>>8)))|((((uint32_t)1+bglib_temp_msg.cmd_sme_set_ap_password.password.len)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0xf<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_sme_set_ap_password.password.len,(uint8_t*)PASSWORD_DATA);\
 }
 /**Set the maximum amount of stations that can be associated to the Access Point at the same time.**/
 #define wifi_cmd_sme_set_ap_max_clients(MAX_CLIENTS) \
 {\
 bglib_temp_msg.cmd_sme_set_ap_max_clients.max_clients=MAX_CLIENTS;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x10<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x10<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Start Wi-Fi Protected Setup session**/
 #define wifi_cmd_sme_start_wps() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x11<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x11<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Stop Wi-Fi Protected Setup session**/
 #define wifi_cmd_sme_stop_wps() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x12<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x12<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Get connection signal quality**/
 #define wifi_cmd_sme_get_signal_quality() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x3<<16)|((uint32)0x13<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x3<<16)|((uint32_t)0x13<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Start TCP server**/
 #define wifi_cmd_tcpip_start_tcp_server(PORT,DEFAULT_DESTINATION) \
 {\
 bglib_temp_msg.cmd_tcpip_start_tcp_server.port=PORT;\
 bglib_temp_msg.cmd_tcpip_start_tcp_server.default_destination=DEFAULT_DESTINATION;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+0)>>8)))|((((uint32)3+0)&0xff)<<8)|((uint32)0x4<<16)|((uint32)0x0<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+0)>>8)))|((((uint32_t)3+0)&0xff)<<8)|((uint32_t)0x4<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Attempt to create a new TCP connection**/
 #define wifi_cmd_tcpip_tcp_connect(ADDRESS,PORT,ROUTING) \
@@ -1843,16 +1843,16 @@ bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
 bglib_temp_msg.cmd_tcpip_tcp_connect.address.u=ADDRESS;\
 bglib_temp_msg.cmd_tcpip_tcp_connect.port=PORT;\
 bglib_temp_msg.cmd_tcpip_tcp_connect.routing=ROUTING;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)7+0)>>8)))|((((uint32)7+0)&0xff)<<8)|((uint32)0x4<<16)|((uint32)0x1<<24);\
-bglib_output (4+7,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)7+0)>>8)))|((((uint32_t)7+0)&0xff)<<8)|((uint32_t)0x4<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+7,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Create a new UDP Server**/
 #define wifi_cmd_tcpip_start_udp_server(PORT,DEFAULT_DESTINATION) \
 {\
 bglib_temp_msg.cmd_tcpip_start_udp_server.port=PORT;\
 bglib_temp_msg.cmd_tcpip_start_udp_server.default_destination=DEFAULT_DESTINATION;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+0)>>8)))|((((uint32)3+0)&0xff)<<8)|((uint32)0x4<<16)|((uint32)0x2<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+0)>>8)))|((((uint32_t)3+0)&0xff)<<8)|((uint32_t)0x4<<16)|((uint32_t)0x2<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Create a new UDP connection**/
 #define wifi_cmd_tcpip_udp_connect(ADDRESS,PORT,ROUTING) \
@@ -1860,8 +1860,8 @@ bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
 bglib_temp_msg.cmd_tcpip_udp_connect.address.u=ADDRESS;\
 bglib_temp_msg.cmd_tcpip_udp_connect.port=PORT;\
 bglib_temp_msg.cmd_tcpip_udp_connect.routing=ROUTING;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)7+0)>>8)))|((((uint32)7+0)&0xff)<<8)|((uint32)0x4<<16)|((uint32)0x3<<24);\
-bglib_output (4+7,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)7+0)>>8)))|((((uint32_t)7+0)&0xff)<<8)|((uint32_t)0x4<<16)|((uint32_t)0x3<<24);\
+bglib_output (4+7,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Configure TCP/IP**/
 #define wifi_cmd_tcpip_configure(ADDRESS,NETMASK,GATEWAY,USE_DHCP) \
@@ -1870,85 +1870,85 @@ bglib_temp_msg.cmd_tcpip_configure.address.u=ADDRESS;\
 bglib_temp_msg.cmd_tcpip_configure.netmask.u=NETMASK;\
 bglib_temp_msg.cmd_tcpip_configure.gateway.u=GATEWAY;\
 bglib_temp_msg.cmd_tcpip_configure.use_dhcp=USE_DHCP;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)13+0)>>8)))|((((uint32)13+0)&0xff)<<8)|((uint32)0x4<<16)|((uint32)0x4<<24);\
-bglib_output (4+13,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)13+0)>>8)))|((((uint32_t)13+0)&0xff)<<8)|((uint32_t)0x4<<16)|((uint32_t)0x4<<24);\
+bglib_output (4+13,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Configure DNS**/
 #define wifi_cmd_tcpip_dns_configure(INDEX,ADDRESS) \
 {\
 bglib_temp_msg.cmd_tcpip_dns_configure.index=INDEX;\
 bglib_temp_msg.cmd_tcpip_dns_configure.address.u=ADDRESS;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)5+0)>>8)))|((((uint32)5+0)&0xff)<<8)|((uint32)0x4<<16)|((uint32)0x5<<24);\
-bglib_output (4+5,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)5+0)>>8)))|((((uint32_t)5+0)&0xff)<<8)|((uint32_t)0x4<<16)|((uint32_t)0x5<<24);\
+bglib_output (4+5,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Start resolving a hostname into an IP address using the configured DNS server**/
 #define wifi_cmd_tcpip_dns_gethostbyname(NAME_LEN,NAME_DATA) \
 {\
 bglib_temp_msg.cmd_tcpip_dns_gethostbyname.name.len=NAME_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+bglib_temp_msg.cmd_tcpip_dns_gethostbyname.name.len)>>8)))|((((uint32)1+bglib_temp_msg.cmd_tcpip_dns_gethostbyname.name.len)&0xff)<<8)|((uint32)0x4<<16)|((uint32)0x6<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_tcpip_dns_gethostbyname.name.len,(uint8*)NAME_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+bglib_temp_msg.cmd_tcpip_dns_gethostbyname.name.len)>>8)))|((((uint32_t)1+bglib_temp_msg.cmd_tcpip_dns_gethostbyname.name.len)&0xff)<<8)|((uint32_t)0x4<<16)|((uint32_t)0x6<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_tcpip_dns_gethostbyname.name.len,(uint8_t*)NAME_DATA);\
 }
 /**Bind existing UDP connection to specific source port**/
 #define wifi_cmd_tcpip_udp_bind(ENDPOINT,PORT) \
 {\
 bglib_temp_msg.cmd_tcpip_udp_bind.endpoint=ENDPOINT;\
 bglib_temp_msg.cmd_tcpip_udp_bind.port=PORT;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+0)>>8)))|((((uint32)3+0)&0xff)<<8)|((uint32)0x4<<16)|((uint32)0x7<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+0)>>8)))|((((uint32_t)3+0)&0xff)<<8)|((uint32_t)0x4<<16)|((uint32_t)0x7<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set DHCP hostname parameter**/
 #define wifi_cmd_tcpip_dhcp_set_hostname(HOSTNAME_LEN,HOSTNAME_DATA) \
 {\
 bglib_temp_msg.cmd_tcpip_dhcp_set_hostname.hostname.len=HOSTNAME_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+bglib_temp_msg.cmd_tcpip_dhcp_set_hostname.hostname.len)>>8)))|((((uint32)1+bglib_temp_msg.cmd_tcpip_dhcp_set_hostname.hostname.len)&0xff)<<8)|((uint32)0x4<<16)|((uint32)0x8<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_tcpip_dhcp_set_hostname.hostname.len,(uint8*)HOSTNAME_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+bglib_temp_msg.cmd_tcpip_dhcp_set_hostname.hostname.len)>>8)))|((((uint32_t)1+bglib_temp_msg.cmd_tcpip_dhcp_set_hostname.hostname.len)&0xff)<<8)|((uint32_t)0x4<<16)|((uint32_t)0x8<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_tcpip_dhcp_set_hostname.hostname.len,(uint8_t*)HOSTNAME_DATA);\
 }
 /**Send data to a given endpoint**/
 #define wifi_cmd_endpoint_send(ENDPOINT,DATA_LEN,DATA_DATA) \
 {\
 bglib_temp_msg.cmd_endpoint_send.endpoint=ENDPOINT;\
 bglib_temp_msg.cmd_endpoint_send.data.len=DATA_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)2+bglib_temp_msg.cmd_endpoint_send.data.len)>>8)))|((((uint32)2+bglib_temp_msg.cmd_endpoint_send.data.len)&0xff)<<8)|((uint32)0x5<<16)|((uint32)0x0<<24);\
-bglib_output (4+2,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_endpoint_send.data.len,(uint8*)DATA_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)2+bglib_temp_msg.cmd_endpoint_send.data.len)>>8)))|((((uint32_t)2+bglib_temp_msg.cmd_endpoint_send.data.len)&0xff)<<8)|((uint32_t)0x5<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+2,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_endpoint_send.data.len,(uint8_t*)DATA_DATA);\
 }
 /**set streaming mode**/
 #define wifi_cmd_endpoint_set_streaming(ENDPOINT,STREAMING) \
 {\
 bglib_temp_msg.cmd_endpoint_set_streaming.endpoint=ENDPOINT;\
 bglib_temp_msg.cmd_endpoint_set_streaming.streaming=STREAMING;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)2+0)>>8)))|((((uint32)2+0)&0xff)<<8)|((uint32)0x5<<16)|((uint32)0x1<<24);\
-bglib_output (4+2,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)2+0)>>8)))|((((uint32_t)2+0)&0xff)<<8)|((uint32_t)0x5<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+2,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**set active status**/
 #define wifi_cmd_endpoint_set_active(ENDPOINT,ACTIVE) \
 {\
 bglib_temp_msg.cmd_endpoint_set_active.endpoint=ENDPOINT;\
 bglib_temp_msg.cmd_endpoint_set_active.active=ACTIVE;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)2+0)>>8)))|((((uint32)2+0)&0xff)<<8)|((uint32)0x5<<16)|((uint32)0x2<<24);\
-bglib_output (4+2,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)2+0)>>8)))|((((uint32_t)2+0)&0xff)<<8)|((uint32_t)0x5<<16)|((uint32_t)0x2<<24);\
+bglib_output (4+2,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**set destination for streaming mode**/
 #define wifi_cmd_endpoint_set_streaming_destination(ENDPOINT,STREAMING_DESTINATION) \
 {\
 bglib_temp_msg.cmd_endpoint_set_streaming_destination.endpoint=ENDPOINT;\
 bglib_temp_msg.cmd_endpoint_set_streaming_destination.streaming_destination=STREAMING_DESTINATION;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)2+0)>>8)))|((((uint32)2+0)&0xff)<<8)|((uint32)0x5<<16)|((uint32)0x3<<24);\
-bglib_output (4+2,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)2+0)>>8)))|((((uint32_t)2+0)&0xff)<<8)|((uint32_t)0x5<<16)|((uint32_t)0x3<<24);\
+bglib_output (4+2,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Close the endpoint**/
 #define wifi_cmd_endpoint_close(ENDPOINT) \
 {\
 bglib_temp_msg.cmd_endpoint_close.endpoint=ENDPOINT;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x5<<16)|((uint32)0x4<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x5<<16)|((uint32_t)0x4<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set transmit packet size. **/
 #define wifi_cmd_endpoint_set_transmit_size(ENDPOINT,SIZE) \
 {\
 bglib_temp_msg.cmd_endpoint_set_transmit_size.endpoint=ENDPOINT;\
 bglib_temp_msg.cmd_endpoint_set_transmit_size.size=SIZE;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+0)>>8)))|((((uint32)3+0)&0xff)<<8)|((uint32)0x5<<16)|((uint32)0x5<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+0)>>8)))|((((uint32_t)3+0)&0xff)<<8)|((uint32_t)0x5<<16)|((uint32_t)0x5<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set soft timer to send events**/
 #define wifi_cmd_hardware_set_soft_timer(TIME,HANDLE,SINGLE_SHOT) \
@@ -1956,30 +1956,30 @@ bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
 bglib_temp_msg.cmd_hardware_set_soft_timer.time=TIME;\
 bglib_temp_msg.cmd_hardware_set_soft_timer.handle=HANDLE;\
 bglib_temp_msg.cmd_hardware_set_soft_timer.single_shot=SINGLE_SHOT;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)6+0)>>8)))|((((uint32)6+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x0<<24);\
-bglib_output (4+6,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)6+0)>>8)))|((((uint32_t)6+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+6,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Configure external interrupt**/
 #define wifi_cmd_hardware_external_interrupt_config(ENABLE,POLARITY) \
 {\
 bglib_temp_msg.cmd_hardware_external_interrupt_config.enable=ENABLE;\
 bglib_temp_msg.cmd_hardware_external_interrupt_config.polarity=POLARITY;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)2+0)>>8)))|((((uint32)2+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x1<<24);\
-bglib_output (4+2,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)2+0)>>8)))|((((uint32_t)2+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+2,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Configure change notification**/
 #define wifi_cmd_hardware_change_notification_config(ENABLE) \
 {\
 bglib_temp_msg.cmd_hardware_change_notification_config.enable=ENABLE;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)4+0)>>8)))|((((uint32)4+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x2<<24);\
-bglib_output (4+4,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)4+0)>>8)))|((((uint32_t)4+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x2<<24);\
+bglib_output (4+4,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Configure change notification pull-up**/
 #define wifi_cmd_hardware_change_notification_pullup(PULLUP) \
 {\
 bglib_temp_msg.cmd_hardware_change_notification_pullup.pullup=PULLUP;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)4+0)>>8)))|((((uint32)4+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x3<<24);\
-bglib_output (4+4,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)4+0)>>8)))|((((uint32_t)4+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x3<<24);\
+bglib_output (4+4,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Configure I/O-port direction**/
 #define wifi_cmd_hardware_io_port_config_direction(PORT,MASK,DIRECTION) \
@@ -1987,8 +1987,8 @@ bglib_output (4+4,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
 bglib_temp_msg.cmd_hardware_io_port_config_direction.port=PORT;\
 bglib_temp_msg.cmd_hardware_io_port_config_direction.mask=MASK;\
 bglib_temp_msg.cmd_hardware_io_port_config_direction.direction=DIRECTION;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)5+0)>>8)))|((((uint32)5+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x4<<24);\
-bglib_output (4+5,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)5+0)>>8)))|((((uint32_t)5+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x4<<24);\
+bglib_output (4+5,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Configure I/O-port open drain**/
 #define wifi_cmd_hardware_io_port_config_open_drain(PORT,MASK,OPEN_DRAIN) \
@@ -1996,8 +1996,8 @@ bglib_output (4+5,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
 bglib_temp_msg.cmd_hardware_io_port_config_open_drain.port=PORT;\
 bglib_temp_msg.cmd_hardware_io_port_config_open_drain.mask=MASK;\
 bglib_temp_msg.cmd_hardware_io_port_config_open_drain.open_drain=OPEN_DRAIN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)5+0)>>8)))|((((uint32)5+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x5<<24);\
-bglib_output (4+5,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)5+0)>>8)))|((((uint32_t)5+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x5<<24);\
+bglib_output (4+5,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set the pins of an I/O-port**/
 #define wifi_cmd_hardware_io_port_write(PORT,MASK,DATA) \
@@ -2005,16 +2005,16 @@ bglib_output (4+5,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
 bglib_temp_msg.cmd_hardware_io_port_write.port=PORT;\
 bglib_temp_msg.cmd_hardware_io_port_write.mask=MASK;\
 bglib_temp_msg.cmd_hardware_io_port_write.data=DATA;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)5+0)>>8)))|((((uint32)5+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x6<<24);\
-bglib_output (4+5,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)5+0)>>8)))|((((uint32_t)5+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x6<<24);\
+bglib_output (4+5,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Read the pins of an I/O-port**/
 #define wifi_cmd_hardware_io_port_read(PORT,MASK) \
 {\
 bglib_temp_msg.cmd_hardware_io_port_read.port=PORT;\
 bglib_temp_msg.cmd_hardware_io_port_read.mask=MASK;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+0)>>8)))|((((uint32)3+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x7<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+0)>>8)))|((((uint32_t)3+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x7<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set output compare settings**/
 #define wifi_cmd_hardware_output_compare(INDEX,BIT32,TIMER,MODE,COMPARE_VALUE) \
@@ -2024,23 +2024,23 @@ bglib_temp_msg.cmd_hardware_output_compare.bit32=BIT32;\
 bglib_temp_msg.cmd_hardware_output_compare.timer=TIMER;\
 bglib_temp_msg.cmd_hardware_output_compare.mode=MODE;\
 bglib_temp_msg.cmd_hardware_output_compare.compare_value=COMPARE_VALUE;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)8+0)>>8)))|((((uint32)8+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x8<<24);\
-bglib_output (4+8,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)8+0)>>8)))|((((uint32_t)8+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x8<<24);\
+bglib_output (4+8,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Read devices A/D converter**/
 #define wifi_cmd_hardware_adc_read(INPUT) \
 {\
 bglib_temp_msg.cmd_hardware_adc_read.input=INPUT;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0x9<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0x9<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Init Real Time Clock**/
 #define wifi_cmd_hardware_rtc_init(ENABLE,DRIFT) \
 {\
 bglib_temp_msg.cmd_hardware_rtc_init.enable=ENABLE;\
 bglib_temp_msg.cmd_hardware_rtc_init.drift=DRIFT;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+0)>>8)))|((((uint32)3+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0xa<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+0)>>8)))|((((uint32_t)3+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0xa<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set Real Time Clock time**/
 #define wifi_cmd_hardware_rtc_set_time(YEAR,MONTH,DAY,WEEKDAY,HOUR,MINUTE,SECOND) \
@@ -2052,14 +2052,14 @@ bglib_temp_msg.cmd_hardware_rtc_set_time.weekday=WEEKDAY;\
 bglib_temp_msg.cmd_hardware_rtc_set_time.hour=HOUR;\
 bglib_temp_msg.cmd_hardware_rtc_set_time.minute=MINUTE;\
 bglib_temp_msg.cmd_hardware_rtc_set_time.second=SECOND;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)8+0)>>8)))|((((uint32)8+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0xb<<24);\
-bglib_output (4+8,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)8+0)>>8)))|((((uint32_t)8+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0xb<<24);\
+bglib_output (4+8,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Get Real Time Clock time**/
 #define wifi_cmd_hardware_rtc_get_time() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0xc<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0xc<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set Real Time Clock alarm**/
 #define wifi_cmd_hardware_rtc_set_alarm(MONTH,DAY,WEEKDAY,HOUR,MINUTE,SECOND,REPEAT_MASK,REPEAT_COUNT) \
@@ -2072,48 +2072,48 @@ bglib_temp_msg.cmd_hardware_rtc_set_alarm.minute=MINUTE;\
 bglib_temp_msg.cmd_hardware_rtc_set_alarm.second=SECOND;\
 bglib_temp_msg.cmd_hardware_rtc_set_alarm.repeat_mask=REPEAT_MASK;\
 bglib_temp_msg.cmd_hardware_rtc_set_alarm.repeat_count=REPEAT_COUNT;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)9+0)>>8)))|((((uint32)9+0)&0xff)<<8)|((uint32)0x6<<16)|((uint32)0xd<<24);\
-bglib_output (4+9,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)9+0)>>8)))|((((uint32_t)9+0)&0xff)<<8)|((uint32_t)0x6<<16)|((uint32_t)0xd<<24);\
+bglib_output (4+9,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Defragment persistent store**/
 #define wifi_cmd_flash_ps_defrag() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x7<<16)|((uint32)0x0<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x7<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Dump all ps keys**/
 #define wifi_cmd_flash_ps_dump() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x7<<16)|((uint32)0x1<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x7<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Erase all ps keys. Warning: This will erase the device's MAC address!**/
 #define wifi_cmd_flash_ps_erase_all() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0x7<<16)|((uint32)0x2<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0x7<<16)|((uint32_t)0x2<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Store a value to the given key in the persistent store**/
 #define wifi_cmd_flash_ps_save(KEY,VALUE_LEN,VALUE_DATA) \
 {\
 bglib_temp_msg.cmd_flash_ps_save.key=KEY;\
 bglib_temp_msg.cmd_flash_ps_save.value.len=VALUE_LEN;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+bglib_temp_msg.cmd_flash_ps_save.value.len)>>8)))|((((uint32)3+bglib_temp_msg.cmd_flash_ps_save.value.len)&0xff)<<8)|((uint32)0x7<<16)|((uint32)0x3<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,bglib_temp_msg.cmd_flash_ps_save.value.len,(uint8*)VALUE_DATA);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+bglib_temp_msg.cmd_flash_ps_save.value.len)>>8)))|((((uint32_t)3+bglib_temp_msg.cmd_flash_ps_save.value.len)&0xff)<<8)|((uint32_t)0x7<<16)|((uint32_t)0x3<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,bglib_temp_msg.cmd_flash_ps_save.value.len,(uint8_t*)VALUE_DATA);\
 }
 /**Retrieve the value from the persistent store for the given key **/
 #define wifi_cmd_flash_ps_load(KEY) \
 {\
 bglib_temp_msg.cmd_flash_ps_load.key=KEY;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)2+0)>>8)))|((((uint32)2+0)&0xff)<<8)|((uint32)0x7<<16)|((uint32)0x4<<24);\
-bglib_output (4+2,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)2+0)>>8)))|((((uint32_t)2+0)&0xff)<<8)|((uint32_t)0x7<<16)|((uint32_t)0x4<<24);\
+bglib_output (4+2,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Erase the key and value from the persisten store.**/
 #define wifi_cmd_flash_ps_erase(KEY) \
 {\
 bglib_temp_msg.cmd_flash_ps_erase.key=KEY;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)2+0)>>8)))|((((uint32)2+0)&0xff)<<8)|((uint32)0x7<<16)|((uint32)0x5<<24);\
-bglib_output (4+2,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)2+0)>>8)))|((((uint32_t)2+0)&0xff)<<8)|((uint32_t)0x7<<16)|((uint32_t)0x5<<24);\
+bglib_output (4+2,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Start I2C transmission for reading**/
 #define wifi_cmd_i2c_start_read(ENDPOINT,SLAVE_ADDRESS,LENGTH) \
@@ -2121,23 +2121,23 @@ bglib_output (4+2,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
 bglib_temp_msg.cmd_i2c_start_read.endpoint=ENDPOINT;\
 bglib_temp_msg.cmd_i2c_start_read.slave_address=SLAVE_ADDRESS;\
 bglib_temp_msg.cmd_i2c_start_read.length=LENGTH;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)4+0)>>8)))|((((uint32)4+0)&0xff)<<8)|((uint32)0x8<<16)|((uint32)0x0<<24);\
-bglib_output (4+4,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)4+0)>>8)))|((((uint32_t)4+0)&0xff)<<8)|((uint32_t)0x8<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+4,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Start I2C transmission for writing**/
 #define wifi_cmd_i2c_start_write(ENDPOINT,SLAVE_ADDRESS) \
 {\
 bglib_temp_msg.cmd_i2c_start_write.endpoint=ENDPOINT;\
 bglib_temp_msg.cmd_i2c_start_write.slave_address=SLAVE_ADDRESS;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+0)>>8)))|((((uint32)3+0)&0xff)<<8)|((uint32)0x8<<16)|((uint32)0x1<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+0)>>8)))|((((uint32_t)3+0)&0xff)<<8)|((uint32_t)0x8<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Stop I2C transmission for writing**/
 #define wifi_cmd_i2c_stop(ENDPOINT) \
 {\
 bglib_temp_msg.cmd_i2c_stop.endpoint=ENDPOINT;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0x8<<16)|((uint32)0x2<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0x8<<16)|((uint32_t)0x2<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Enable/disable http, dhcp and dns server**/
 #define wifi_cmd_https_enable(HTTPS,DHCPS,DNSS) \
@@ -2145,27 +2145,27 @@ bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
 bglib_temp_msg.cmd_https_enable.https=HTTPS;\
 bglib_temp_msg.cmd_https_enable.dhcps=DHCPS;\
 bglib_temp_msg.cmd_https_enable.dnss=DNSS;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)3+0)>>8)))|((((uint32)3+0)&0xff)<<8)|((uint32)0x9<<16)|((uint32)0x0<<24);\
-bglib_output (4+3,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)3+0)>>8)))|((((uint32_t)3+0)&0xff)<<8)|((uint32_t)0x9<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+3,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Set wired Ethernet data route**/
 #define wifi_cmd_ethernet_set_dataroute(ROUTE) \
 {\
 bglib_temp_msg.cmd_ethernet_set_dataroute.route=ROUTE;\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)1+0)>>8)))|((((uint32)1+0)&0xff)<<8)|((uint32)0xa<<16)|((uint32)0x0<<24);\
-bglib_output (4+1,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)1+0)>>8)))|((((uint32_t)1+0)&0xff)<<8)|((uint32_t)0xa<<16)|((uint32_t)0x0<<24);\
+bglib_output (4+1,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Close wired Ethernet connection**/
 #define wifi_cmd_ethernet_close() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0xa<<16)|((uint32)0x1<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0xa<<16)|((uint32_t)0x1<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
 /**Test wired Ethernet cable connection**/
 #define wifi_cmd_ethernet_connected() \
 {\
-bglib_temp_msg.header=(((uint32)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32)0+0)>>8)))|((((uint32)0+0)&0xff)<<8)|((uint32)0xa<<16)|((uint32)0x2<<24);\
-bglib_output (4+0,(uint8*)&bglib_temp_msg,0,(uint8*)NULL);\
+bglib_temp_msg.header=(((uint32_t)wifi_msg_type_cmd|wifi_dev_type_wifi|(((uint32_t)0+0)>>8)))|((((uint32_t)0+0)&0xff)<<8)|((uint32_t)0xa<<16)|((uint32_t)0x2<<24);\
+bglib_output (4+0,(uint8_t*)&bglib_temp_msg,0,(uint8_t*)NULL);\
 }
          
 #endif

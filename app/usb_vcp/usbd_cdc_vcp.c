@@ -200,31 +200,7 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
       APP_Rx_ptr_in = 0;
     }  
    } 
-    
-    
-  /* Original Code
-  uint32_t i;
-  for(i = 0; i < Len ; i++)
-  {
-    if (linecoding.datatype == 7)
-    {
-      APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i] & 0x7F;
-    }
-    else if (linecoding.datatype == 8)
-    {
-      APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i];
-    }
-    APP_Rx_ptr_in++;    
-   */
-    
-    /* To avoid buffer overflow */
-    /*if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
-    {
-      APP_Rx_ptr_in = 0;
-    }  
-  }  */
-
-  
+      
   return USBD_OK;
 }
 
@@ -246,10 +222,7 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
 static uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
 { 
 
-  //VCP_DataTx(Buf,Len); 
-  
-  USART2_Send_Packet(Len, Buf);   
-    
+  VCP_DataTx(Buf,Len);     
   return USBD_OK;
 }
 

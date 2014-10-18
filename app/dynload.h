@@ -6,7 +6,7 @@
 #ifndef __DYNLOAD_H_
 #define __DYNLOAD_H_
 
-#define DL_MAX_CURRENT              (8000)
+#define DL_MAX_CURRENT              (6000)
 #define DL_MIN_CURRENT              (100)
 
 // Return values
